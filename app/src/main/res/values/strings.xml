@@ -1,4 +1,8 @@
 <resources>
-    <string name="app_name">app-template-java</string>
+    <string name="app_name">AndroidRemake2</string>
     <string name="splashscreen_title">SplashScreen</string>
+    <string name="string_discover">Discover</string>
+    <string name="string_search">Search</string>
+    <string name="string_your_library">Your Library</string>
+    <string name="string_settings">Settings</string>
 </resources>
