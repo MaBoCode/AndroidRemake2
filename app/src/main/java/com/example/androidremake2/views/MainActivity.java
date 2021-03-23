@@ -1,9 +1,9 @@
-package com.example.app_template_java.views;
+package com.example.androidremake2.views;
 
 import android.os.Bundle;
 
-import com.example.app_template_java.databinding.ActMainBinding;
-import com.example.app_template_java.injects.base.BaseActivity;
+import com.example.androidremake2.databinding.ActMainBinding;
+import com.example.androidremake2.injects.base.BaseActivity;
 
 import org.androidannotations.annotations.EActivity;
 

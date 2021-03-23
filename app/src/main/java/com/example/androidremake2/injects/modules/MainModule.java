@@ -1,4 +1,4 @@
-package com.example.app_template_java.injects.modules;
+package com.example.androidremake2.injects.modules;
 
 import dagger.Module;
 import dagger.hilt.InstallIn;
