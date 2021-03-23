@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/podcastBottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineTop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="32dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="92dp" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/podcastCardView"
+            android:layout_width="312dp"
+            android:layout_height="312dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="8dp"
+            app:layout_constraintTop_toTopOf="@id/guidelineTop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            >
+
+            <eightbitlab.com.blurview.BlurView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <ImageView
+                    android:id="@+id/podcastImg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_launcher_background"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="Podcast image"/>
+
+            </eightbitlab.com.blurview.BlurView>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/txtPodcastTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Podcast Title"
+            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/podcastCardView"
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft" />
+
+        <TextView
+            android:id="@+id/txtPodcastAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Podcast Author"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+            android:alpha="0.6"
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@id/txtPodcastTitle"
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/podcastSlider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:trackColorActive="?attr/colorOnSurface"
+            app:trackColorInactive="@color/white_alpha_02"
+            app:thumbColor="?attr/colorOnSurface"
+            app:thumbRadius="6dp"
+            app:haloColor="@color/white_alpha_06"
+            app:labelBehavior="gone"
+            app:layout_constraintTop_toBottomOf="@id/txtPodcastAuthor"
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+            app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+            app:layout_constraintBottom_toTopOf="@id/podcastBtns"/>
+
+        <TextView
+            android:id="@+id/startDurationTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0:00"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            android:layout_marginLeft="12dp"
+            app:layout_constraintTop_toBottomOf="@id/podcastSlider"
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft" />
+
+        <TextView
+            android:id="@+id/endDurationTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3:00"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            android:layout_marginRight="12dp"
+            app:layout_constraintTop_toBottomOf="@id/podcastSlider"
+            app:layout_constraintEnd_toEndOf="@id/guidelineRight"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/podcastBtns"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/endDurationTxt"
+            app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+            app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+            app:layout_constraintBottom_toBottomOf="@id/guidelineBottom">
+
+            <ImageView
+                android:id="@+id/btnSkipPrevious"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_skip_previous"
+                android:foreground="?attr/selectableItemBackground"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnPlayPause"/>
+
+            <ImageView
+                android:id="@+id/btnPlayPause"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_pause"
+                android:foreground="?attr/selectableItemBackground"
+                app:layout_constraintStart_toEndOf="@id/btnSkipPrevious"
+                app:layout_constraintEnd_toStartOf="@id/btnSkipNext" />
+
+            <ImageView
+                android:id="@+id/btnSkipNext"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_skip_next"
+                android:foreground="?attr/selectableItemBackground"
+                app:layout_constraintStart_toEndOf="@id/btnPlayPause"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
