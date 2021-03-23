@@ -1,6 +1,7 @@
-package com.example.app_template_java.injects.modules;
+package com.example.androidremake2.injects.modules;
 
-import com.example.app_template_java.core.user.UserService;
+import com.example.androidremake2.core.podcast.PodcastService;
+import com.example.androidremake2.core.user.UserService;
 
 import javax.inject.Singleton;
 
@@ -25,21 +26,28 @@ public class WebServiceModule {
 
     @Provides
     @Singleton
-    public Retrofit provideRetrofit(OkHttpClient okHttpClient) {
+    public UserService provideUserService(OkHttpClient okHttpClient) {
         String serverUrl = "https://jsonplaceholder.typicode.com/";
-
-        return new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(serverUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .client(okHttpClient)
                 .build();
+        return retrofit.create(UserService.class);
     }
 
     @Provides
     @Singleton
-    public UserService provideUserService(Retrofit retrofit) {
-        return retrofit.create(UserService.class);
+    public PodcastService providePodcastService(OkHttpClient okHttpClient) {
+        String serverUrl = "https://api.simplecast.com/";
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(serverUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                .client(okHttpClient)
+                .build();
+        return retrofit.create(PodcastService.class);
     }
 
 }
