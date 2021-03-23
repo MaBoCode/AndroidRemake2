@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/discover_item"
+        android:title="@string/string_discover"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/discover_selector" />
+
+    <item
+        android:id="@+id/search_item"
+        android:title="@string/string_search"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/search_selector"/>
+
+    <item
+        android:id="@+id/library_item"
+        android:title="@string/string_your_library"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/library_selector"/>
+
+    <item
+        android:id="@+id/settings_item"
+        android:title="@string/string_settings"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/settings_selector"/>
+
+</menu>
