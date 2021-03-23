@@ -1,4 +1,4 @@
-package com.example.app_template_java.views.base;
+package com.example.androidremake2.views.base;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseRecyclerViewAdapter<T, V extends View> extends RecyclerView.Adapter<RecyclerViewWrapper<V>> {

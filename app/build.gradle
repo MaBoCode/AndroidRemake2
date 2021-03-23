@@ -9,7 +9,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.example.app_template_java"
+        applicationId "com.example.androidremake2"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.getVersionCode()
@@ -51,8 +51,14 @@ def junitVersion = "4.13.1"
 def androidxTestVersion = "1.1.2"
 def rxJavaVersion = "3.0.11"
 def rxAndroidVersion = "3.0.0"
+def picassoVersion = "2.8"
 
 dependencies {
+
+    implementation 'com.eightbitlab:blurview:1.6.6'
+
+    // Picasso
+    implementation "com.squareup.picasso:picasso:$picassoVersion"
 
     // RxJava and RxAndroid
     implementation "io.reactivex.rxjava3:rxjava:$rxJavaVersion"

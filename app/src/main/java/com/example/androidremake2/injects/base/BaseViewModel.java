@@ -1,4 +1,4 @@
-package com.example.app_template_java.injects.base;
+package com.example.androidremake2.injects.base;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
