@@ -1,4 +1,4 @@
-package com.example.app_template_java.core.user;
+package com.example.androidremake2.core.user;
 
 import java.io.Serializable;
 
