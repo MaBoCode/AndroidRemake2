@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/splashScreenFragment"
-        android:name="com.example.app_template_java.views.SplashScreenFragment"
+        android:name="com.example.androidremake2.views.SplashScreenFragment"
         android:label="frg_splashcreen"
         tools:layout="@layout/frg_splashscreen">
 
@@ -23,8 +23,25 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.app_template_java.views.MainFragment"
+        android:name="com.example.androidremake2.views.podcast.MainFragment"
         android:label="frg_main"
-        tools:layout="@layout/frg_main"/>
+        tools:layout="@layout/frg_main" >
+        <action
+            android:id="@+id/play_podcast_action"
+            app:destination="@id/podcastDialog" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/podcastDialog"
+        android:name="com.example.androidremake2.views.podcast.PodcastBottomSheetDialogFragment"
+        android:label="dlg_podcast"
+        tools:layout="@layout/dlg_modal_bottom_sheet" >
+
+        <argument android:name="podcast" app:nullable="false" app:argType=".core.podcast.Podcast" />
+
+        <action
+            android:id="@+id/dlg_podcast_to_frg_main"
+            app:destination="@id/mainFragment" />
+    </dialog>
 
 </navigation>
