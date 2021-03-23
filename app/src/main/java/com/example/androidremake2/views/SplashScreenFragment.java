@@ -1,4 +1,4 @@
-package com.example.app_template_java.views;
+package com.example.androidremake2.views;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,9 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.Navigation;
 
-import com.example.app_template_java.R;
-import com.example.app_template_java.databinding.FrgSplashscreenBinding;
-import com.example.app_template_java.injects.base.BaseFragment;
+import com.example.androidremake2.R;
+import com.example.androidremake2.databinding.FrgSplashscreenBinding;
+import com.example.androidremake2.injects.base.BaseFragment;
 
 import org.androidannotations.annotations.EFragment;
 

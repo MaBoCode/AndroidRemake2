@@ -1,4 +1,4 @@
-package com.example.app_template_java.views.base;
+package com.example.androidremake2.views.base;
 
 import android.view.View;
 

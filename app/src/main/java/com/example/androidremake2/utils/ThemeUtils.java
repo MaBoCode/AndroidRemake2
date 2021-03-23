@@ -1,4 +1,4 @@
-package com.example.app_template_java.utils;
+package com.example.androidremake2.utils;
 
 import android.content.Context;
 import android.content.res.Configuration;
