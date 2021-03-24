@@ -1,12 +1,10 @@
 package com.example.androidremake2.core.podcast;
 
-import com.google.gson.annotations.SerializedName;
-
+import java.io.Serializable;
 import java.util.List;
 
-public class PodcastList {
+public class PodcastList implements Serializable {
 
-    @SerializedName("collection")
     public List<Podcast> podcasts;
 
 }

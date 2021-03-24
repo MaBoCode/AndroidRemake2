@@ -40,7 +40,7 @@ public class WebServiceModule {
     @Provides
     @Singleton
     public PodcastService providePodcastService(OkHttpClient okHttpClient) {
-        String serverUrl = "https://api.simplecast.com/";
+        String serverUrl = "https://listen-api.listennotes.com/api/v2/";
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(serverUrl)
                 .addConverterFactory(GsonConverterFactory.create())

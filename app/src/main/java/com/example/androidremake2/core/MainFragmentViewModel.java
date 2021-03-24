@@ -71,6 +71,35 @@ public class MainFragmentViewModel extends BaseViewModel {
                 });
     }
 
+    public void getBestPodcasts() {
+        podcastService.getBestPodcasts()
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Throwable {
+                        _loadingLiveData.postValue(LoadingStatus.LOADING);
+                    }
+                })
+                .doFinally(new Action() {
+                    @Override
+                    public void run() throws Throwable {
+                        _loadingLiveData.postValue(LoadingStatus.NOT_LOADING);
+                    }
+                })
+                .subscribe(new Consumer<PodcastList>() {
+                    @Override
+                    public void accept(PodcastList podcastList) throws Throwable {
+                        _podcastsLiveData.postValue(podcastList.podcasts);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Throwable {
+                        Logs.error(this, throwable.getLocalizedMessage());
+                    }
+                });
+    }
+
     public void getPodcast(String id) {
         podcastService.getPodcast(id)
                 .subscribeOn(Schedulers.io())
@@ -91,35 +120,6 @@ public class MainFragmentViewModel extends BaseViewModel {
                     @Override
                     public void accept(Podcast podcast) throws Throwable {
                         _podcastLiveData.postValue(podcast);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Throwable {
-                        Logs.error(this, throwable.getLocalizedMessage());
-                    }
-                });
-    }
-
-    public void getPodcasts() {
-        podcastService.getPodcasts()
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) throws Throwable {
-                        _loadingLiveData.postValue(LoadingStatus.LOADING);
-                    }
-                })
-                .doFinally(new Action() {
-                    @Override
-                    public void run() throws Throwable {
-                        _loadingLiveData.postValue(LoadingStatus.NOT_LOADING);
-                    }
-                })
-                .subscribe(new Consumer<PodcastList>() {
-                    @Override
-                    public void accept(PodcastList podcastList) throws Throwable {
-                        _podcastsLiveData.postValue(podcastList.podcasts);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

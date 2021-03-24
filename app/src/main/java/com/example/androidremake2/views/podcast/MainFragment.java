@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,17 +21,16 @@ import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.databinding.FrgMainBinding;
 import com.example.androidremake2.injects.base.BaseFragment;
 import com.example.androidremake2.injects.base.BaseViewModel.LoadingStatus;
-import com.example.androidremake2.utils.Logs;
 
 import org.androidannotations.annotations.EFragment;
 
-import java.util.Arrays;
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 @EFragment
-public class MainFragment extends BaseFragment {
+public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodcastItemClickListener {
 
     protected FrgMainBinding binding;
 
@@ -44,39 +45,48 @@ public class MainFragment extends BaseFragment {
 
         initObservers();
 
-        viewModel.getPodcast("c3161c7d-d5ac-46a9-82c1-b18cbcc93b5c");
+        viewModel.getBestPodcasts();
 
         return binding.getRoot();
+    }
+
+    public void displayPodcasts(List<Podcast> podcasts) {
+        RecyclerView podcastRecyclerView = binding.podcastsRecyclerView;
+        PodcastAdapter podcastAdapter = new PodcastAdapter(new Podcast.PodcastDiff(), this);
+        podcastAdapter.submitList(podcasts);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+        layoutManager.setSmoothScrollbarEnabled(true);
+
+        podcastRecyclerView.setHasFixedSize(true);
+        podcastRecyclerView.setLayoutManager(layoutManager);
+        podcastRecyclerView.setAdapter(podcastAdapter);
+
+        SnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(podcastRecyclerView);
     }
 
     @Override
     public void initObservers() {
 
+        viewModel.podcastsLiveData.observe(getViewLifecycleOwner(), new Observer<List<Podcast>>() {
+            @Override
+            public void onChanged(List<Podcast> podcasts) {
+                displayPodcasts(podcasts);
+            }
+        });
+
         viewModel.podcastLiveData.observe(getViewLifecycleOwner(), new Observer<Podcast>() {
             @Override
             public void onChanged(Podcast podcast) {
+                NavController navController = Navigation.findNavController(binding.getRoot());
 
-                if (podcast == null)
-                    return;
+                MainFragmentDirections.PlayPodcastAction action = MainFragmentDirections.playPodcastAction(podcast);
 
-                Podcast p2 = new Podcast(podcast);
-                p2.id = "p2_id2";
+                if (navController != null) {
+                    navController.navigate(action);
+                }
 
-                Podcast p3 = new Podcast(podcast);
-                p3.id = "p3_id3";
-
-                RecyclerView podcastRecyclerView = binding.podcastsRecyclerView;
-                PodcastAdapter podcastAdapter = new PodcastAdapter(new Podcast.PodcastDiff());
-                podcastAdapter.submitList(Arrays.asList(podcast, p2, p3));
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
-                layoutManager.setSmoothScrollbarEnabled(true);
-
-                podcastRecyclerView.setHasFixedSize(true);
-                podcastRecyclerView.setLayoutManager(layoutManager);
-                podcastRecyclerView.setAdapter(podcastAdapter);
-
-                SnapHelper snapHelper = new LinearSnapHelper();
-                snapHelper.attachToRecyclerView(podcastRecyclerView);
+                viewModel.podcastLiveData.removeObserver(this);
             }
         });
 
@@ -87,6 +97,11 @@ public class MainFragment extends BaseFragment {
                 binding.loader.setVisibility(visiblity);
             }
         });
+    }
+
+    @Override
+    public void onPodcastItemClick(View view, Podcast podcast) {
+        viewModel.getPodcast(podcast.id);
     }
 
     public void startAnimations() {
@@ -108,6 +123,8 @@ public class MainFragment extends BaseFragment {
         viewModel.podcastLiveData.removeObservers(getViewLifecycleOwner());
         viewModel.podcastsLiveData.removeObservers(getViewLifecycleOwner());
         viewModel.loadingLiveData.removeObservers(getViewLifecycleOwner());
+
+        binding = null;
 
         super.onDestroy();
     }

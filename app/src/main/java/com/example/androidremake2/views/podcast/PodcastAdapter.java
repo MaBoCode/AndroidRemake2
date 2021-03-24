@@ -1,6 +1,7 @@
 package com.example.androidremake2.views.podcast;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -12,8 +13,15 @@ import com.example.androidremake2.databinding.PodcastListItemBinding;
 
 public class PodcastAdapter extends ListAdapter<Podcast, PodcastViewHolder> {
 
-    public PodcastAdapter(@NonNull DiffUtil.ItemCallback<Podcast> diffCallback) {
+    protected OnPodcastItemClickListener podcastItemClickListener;
+
+    public PodcastAdapter(@NonNull DiffUtil.ItemCallback<Podcast> diffCallback, OnPodcastItemClickListener podcastItemClickListener) {
         super(diffCallback);
+        this.podcastItemClickListener = podcastItemClickListener;
+    }
+
+    public interface OnPodcastItemClickListener {
+        void onPodcastItemClick(View view, Podcast podcast);
     }
 
     @NonNull
@@ -30,6 +38,6 @@ public class PodcastAdapter extends ListAdapter<Podcast, PodcastViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull PodcastViewHolder holder, int position) {
         Podcast podcast = getItem(position);
-        holder.bind(podcast);
+        holder.bind(podcast, podcastItemClickListener);
     }
 }

@@ -2,8 +2,6 @@ package com.example.androidremake2.views.podcast;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -13,9 +11,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.example.androidremake2.R;
 import com.example.androidremake2.core.podcast.Podcast;
+import com.example.androidremake2.core.podcast.PodcastEpisode;
 import com.example.androidremake2.databinding.DlgModalBottomSheetBinding;
 import com.example.androidremake2.utils.Logs;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -39,14 +39,14 @@ public class PodcastBottomSheetDialogFragment extends BottomSheetDialogFragment 
         public void onClick(View view) {
 
             if (mediaPlayer.isPlaying()) {
-                binding.btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_play, null));
+                binding.btnPlayPause.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_play, null));
                 if (audioSliderThread != null) {
                     audioSliderThread.interrupt();
                     audioSliderThread = null;
                 }
                 mediaPlayer.pause();
             } else {
-                binding.btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause, null));
+                binding.btnPlayPause.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_pause, null));
 
                 mediaPlayer.start();
 
@@ -113,20 +113,34 @@ public class PodcastBottomSheetDialogFragment extends BottomSheetDialogFragment 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DlgModalBottomSheetBinding.inflate(inflater, container, false);
 
-        binding.btnPlayPause.setOnClickListener(onPlayPauseClick);
-
         Podcast podcast = PodcastBottomSheetDialogFragmentArgs.fromBundle(getArguments()).getPodcast();
 
-        writeDuration(0, 98);
+        displayPodcastEpisode(podcast);
+        startPodcast(podcast);
 
+        return binding.getRoot();
+    }
+
+    public void displayPodcastEpisode(Podcast podcast) {
+        PodcastEpisode episode = podcast.episodes.get(0);
+
+        binding.btnPlayPause.setOnClickListener(onPlayPauseClick);
+
+        writeDuration(0, episode.duration);
+
+        // Setup slider
         binding.podcastSlider.setValueFrom(0);
-        binding.podcastSlider.setValueTo(98);
+        binding.podcastSlider.setValueTo(episode.duration);
         binding.podcastSlider.addOnSliderTouchListener(onSliderTouch);
 
-        binding.txtPodcastTitle.setText(podcast.title);
-        Picasso.get().load(podcast.imageUrl).into(binding.podcastImg);
+        binding.txtPodcastTitle.setText(episode.title);
+        binding.txtPodcastAuthor.setText(podcast.publisher);
 
-        String url = "https://cdn.simplecast.com/audio/c3161c7d-d5ac-46a9-82c1-b18cbcc93b5c/episodes/77f4e229-a987-433c-9cd6-a0c943012e1f/audio/902a87da-144d-4eac-a1b1-5726bdfc7cc1/default_tc.mp3";
+        Picasso.get().load(episode.imageUrl).into(binding.podcastImg);
+    }
+
+    public void startPodcast(Podcast podcast) {
+        PodcastEpisode firstEpisode = podcast.episodes.get(0);
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioAttributes(
                 new AudioAttributes.Builder()
@@ -136,7 +150,7 @@ public class PodcastBottomSheetDialogFragment extends BottomSheetDialogFragment 
         );
 
         try {
-            mediaPlayer.setDataSource(url);
+            mediaPlayer.setDataSource(firstEpisode.audioUrl);
             mediaPlayer.prepare();
             mediaPlayer.start();
             audioSliderThread = new Thread(this);
@@ -145,8 +159,6 @@ public class PodcastBottomSheetDialogFragment extends BottomSheetDialogFragment 
         } catch (IOException e) {
             Logs.error(this, e.getMessage());
         }
-
-        return binding.getRoot();
     }
 
     @Override
