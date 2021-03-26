@@ -1,0 +1,18 @@
+<resources>
+
+    <style name="Widget.Apptemplatejava.BottomSheet.Modal" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_bottom_sheet</item>
+    </style>
+
+    <style name="Widget.Apptemplatejava.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="colorPrimary">@color/reply_white_50</item>
+    </style>
+
+    <style name="Widget.Apptemplatejava.Slider" parent="Widget.MaterialComponents.Slider">
+        <item name="trackColorInactive">@color/reply_white_50_alpha_060</item>
+        <item name="trackColorActive">@color/reply_white_50</item>
+        <item name="thumbColor">@color/reply_white_50</item>
+        <item name="haloColor">@color/reply_white_50_alpha_20</item>
+    </style>
+
+</resources>
