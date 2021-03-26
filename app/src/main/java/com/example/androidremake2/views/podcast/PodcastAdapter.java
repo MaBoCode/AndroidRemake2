@@ -40,4 +40,5 @@ public class PodcastAdapter extends ListAdapter<Podcast, PodcastViewHolder> {
         Podcast podcast = getItem(position);
         holder.bind(podcast, podcastItemClickListener);
     }
+
 }

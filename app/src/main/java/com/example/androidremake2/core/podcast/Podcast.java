@@ -21,6 +21,7 @@ public class Podcast implements Serializable {
     public String description;
     public String publisher;
     public String publishedAt;
+    public int nextEpisodeIndex = 0;
     public List<PodcastEpisode> episodes;
 
     public Podcast(String imageUrl, String thumbnailUrl, String id, String title, String description,
@@ -44,6 +45,13 @@ public class Podcast implements Serializable {
         this.publisher = p.publisher;
         this.publishedAt = p.publishedAt;
         this.episodes = p.episodes;
+    }
+
+    public PodcastEpisode getNextEpisode() {
+        if (nextEpisodeIndex >= episodes.size())
+            return null;
+
+        return episodes.get(nextEpisodeIndex++);
     }
 
     @Override

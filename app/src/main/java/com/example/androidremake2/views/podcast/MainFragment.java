@@ -85,8 +85,6 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
                 if (navController != null) {
                     navController.navigate(action);
                 }
-
-                viewModel.podcastLiveData.removeObserver(this);
             }
         });
 

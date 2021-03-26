@@ -2,6 +2,7 @@ package com.example.androidremake2.views.podcast;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -11,7 +12,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.androidremake2.R;
 import com.example.androidremake2.core.podcast.Podcast;
@@ -34,39 +35,38 @@ public class PodcastBottomSheetDialogFragment extends BottomSheetDialogFragment 
 
     protected Thread audioSliderThread;
 
+    protected Podcast podcast;
+
     protected View.OnClickListener onPlayPauseClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            playPausePodcast();
+        }
+    };
 
-            if (mediaPlayer.isPlaying()) {
-                binding.btnPlayPause.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_play, null));
-                if (audioSliderThread != null) {
-                    audioSliderThread.interrupt();
-                    audioSliderThread = null;
-                }
-                mediaPlayer.pause();
-            } else {
-                binding.btnPlayPause.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_pause, null));
-
-                mediaPlayer.start();
-
-                if (audioSliderThread == null) {
-                    audioSliderThread = new Thread(PodcastBottomSheetDialogFragment.this);
-                    audioSliderThread.start();
-                }
-            }
+    protected View.OnClickListener onSkipNextClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            skipNextPodcast();
         }
     };
 
     protected Slider.OnSliderTouchListener onSliderTouch = new Slider.OnSliderTouchListener() {
         @Override
         public void onStartTrackingTouch(@NonNull Slider slider) {
+            /*
+            writeDuration(slider.getValue(), slider.getValueTo());
+
             int msec = ((int) slider.getValue()) * 1000;
             mediaPlayer.seekTo(msec);
+             */
         }
 
         @Override
         public void onStopTrackingTouch(@NonNull Slider slider) {
+
+            writeDuration((int) slider.getValue(), (int) slider.getValueTo());
+
             int msec = ((int) slider.getValue()) * 1000;
             mediaPlayer.seekTo(msec);
         }
@@ -95,17 +95,17 @@ public class PodcastBottomSheetDialogFragment extends BottomSheetDialogFragment 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+        BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+
+        bottomSheetDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
-                BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) dialogInterface;
-                BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(binding.podcastBottomSheet);
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                Logs.debug(this, "[DBG] state: " + bottomSheetBehavior.getState());
+                BottomSheetDialog dialog = (BottomSheetDialog) dialogInterface;
+                View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED);
             }
         });
-        return dialog;
+        return bottomSheetDialog;
     }
 
     @Nullable
@@ -122,15 +122,13 @@ public class PodcastBottomSheetDialogFragment extends BottomSheetDialogFragment 
     }
 
     public void displayPodcastEpisode(Podcast podcast) {
-        PodcastEpisode episode = podcast.episodes.get(0);
+        PodcastEpisode episode = podcast.getNextEpisode();
 
         binding.btnPlayPause.setOnClickListener(onPlayPauseClick);
 
-        writeDuration(0, episode.duration);
-
         // Setup slider
         binding.podcastSlider.setValueFrom(0);
-        binding.podcastSlider.setValueTo(episode.duration);
+
         binding.podcastSlider.addOnSliderTouchListener(onSliderTouch);
 
         binding.txtPodcastTitle.setText(episode.title);
@@ -153,12 +151,42 @@ public class PodcastBottomSheetDialogFragment extends BottomSheetDialogFragment 
             mediaPlayer.setDataSource(firstEpisode.audioUrl);
             mediaPlayer.prepare();
             mediaPlayer.start();
+
+            binding.podcastSlider.setValueTo(mediaPlayer.getDuration() / 1000);
+
             audioSliderThread = new Thread(this);
             audioSliderThread.start();
 
         } catch (IOException e) {
             Logs.error(this, e.getMessage());
         }
+    }
+
+    public void playPausePodcast() {
+
+        if (mediaPlayer.isPlaying()) {
+            Drawable playDrawable = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_play);
+            binding.btnPlayPause.setImageDrawable(playDrawable);
+            if (audioSliderThread != null) {
+                audioSliderThread.interrupt();
+                audioSliderThread = null;
+            }
+            mediaPlayer.pause();
+        } else {
+            Drawable pauseDrawable = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_pause);
+            binding.btnPlayPause.setImageDrawable(pauseDrawable);
+
+            mediaPlayer.start();
+
+            if (audioSliderThread == null) {
+                audioSliderThread = new Thread(PodcastBottomSheetDialogFragment.this);
+                audioSliderThread.start();
+            }
+        }
+    }
+
+    public void skipNextPodcast() {
+
     }
 
     @Override
@@ -176,15 +204,30 @@ public class PodcastBottomSheetDialogFragment extends BottomSheetDialogFragment 
                 } catch (InterruptedException e) {
                     Logs.error(this, e.getMessage());
                 }
+
+                if (binding == null)
+                    break;
+
                 binding.podcastSlider.setValue(currentPos);
                 writeDuration(currentPos, duration);
             }
 
-            if (binding != null)
-                binding.btnPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_play, null));
+            if (binding != null) {
+                Drawable playDrawable = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_play);
+                binding.btnPlayPause.setImageDrawable(playDrawable);
+            }
         } catch (IllegalStateException e) {
             Logs.error(this, e.getMessage());
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+
+        Dialog dialog = getDialog();
+        dialog.setOnShowListener(null);
+
+        super.onDestroyView();
     }
 
     @Override
