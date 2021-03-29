@@ -16,6 +16,9 @@ public class Podcast implements Serializable {
     @SerializedName("thumbnail")
     public String thumbnailUrl;
 
+    @SerializedName("total_episodes")
+    public int totalEpisodes;
+
     public String id;
     public String title;
     public String description;
@@ -50,8 +53,8 @@ public class Podcast implements Serializable {
     public PodcastEpisode getNextEpisode() {
         if (nextEpisodeIndex >= episodes.size())
             return null;
-
-        return episodes.get(nextEpisodeIndex++);
+        int oldestEpisodeIndex = totalEpisodes - nextEpisodeIndex++ - 1;
+        return episodes.get(oldestEpisodeIndex);
     }
 
     @Override
@@ -64,6 +67,8 @@ public class Podcast implements Serializable {
                 ", description='" + description + '\'' +
                 ", publisher='" + publisher + '\'' +
                 ", publishedAt='" + publishedAt + '\'' +
+                ", nextEpisodeIndex=" + nextEpisodeIndex +
+                ", episodes=" + episodes +
                 '}';
     }
 

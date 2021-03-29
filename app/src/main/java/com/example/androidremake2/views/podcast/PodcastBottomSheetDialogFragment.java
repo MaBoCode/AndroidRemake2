@@ -113,49 +113,67 @@ public class PodcastBottomSheetDialogFragment extends BottomSheetDialogFragment 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DlgModalBottomSheetBinding.inflate(inflater, container, false);
 
-        Podcast podcast = PodcastBottomSheetDialogFragmentArgs.fromBundle(getArguments()).getPodcast();
+        binding.podcastSlider.addOnSliderTouchListener(onSliderTouch);
+        binding.btnPlayPause.setOnClickListener(onPlayPauseClick);
+        binding.btnSkipNext.setOnClickListener(onSkipNextClick);
 
-        displayPodcastEpisode(podcast);
-        startPodcast(podcast);
+        binding.podcastSlider.setValueFrom(0);
+
+        initMediaPlayer();
+
+        this.podcast = PodcastBottomSheetDialogFragmentArgs.fromBundle(getArguments()).getPodcast();
+
+        binding.txtPodcastAuthor.setText(podcast.publisher);
+
+        PodcastEpisode episode = displayPodcastEpisode(this.podcast);
+        startPodcastEpisode(episode);
 
         return binding.getRoot();
     }
 
-    public void displayPodcastEpisode(Podcast podcast) {
-        PodcastEpisode episode = podcast.getNextEpisode();
-
-        binding.btnPlayPause.setOnClickListener(onPlayPauseClick);
-
-        // Setup slider
-        binding.podcastSlider.setValueFrom(0);
-
-        binding.podcastSlider.addOnSliderTouchListener(onSliderTouch);
-
-        binding.txtPodcastTitle.setText(episode.title);
-        binding.txtPodcastAuthor.setText(podcast.publisher);
-
-        Picasso.get().load(episode.imageUrl).into(binding.podcastImg);
-    }
-
-    public void startPodcast(Podcast podcast) {
-        PodcastEpisode firstEpisode = podcast.episodes.get(0);
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioAttributes(
+    public void initMediaPlayer() {
+        this.mediaPlayer = new MediaPlayer();
+        this.mediaPlayer.setAudioAttributes(
                 new AudioAttributes.Builder()
                         .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                         .setUsage(AudioAttributes.USAGE_MEDIA)
                         .build()
         );
+    }
 
+    public PodcastEpisode displayPodcastEpisode(Podcast podcast) {
+        PodcastEpisode episode = podcast.getNextEpisode();
+
+        if (episode == null) {
+            return null;
+        }
+
+        // Setup slider
+        binding.podcastSlider.setValue(0);
+
+        binding.txtPodcastTitle.setText(episode.title);
+        Picasso.get().load(episode.imageUrl).into(binding.podcastImg);
+
+        return episode;
+    }
+
+    public void startPodcastEpisode(PodcastEpisode episode) {
         try {
-            mediaPlayer.setDataSource(firstEpisode.audioUrl);
+            mediaPlayer.setDataSource(episode.audioUrl);
             mediaPlayer.prepare();
+
+            Drawable pauseDrawable = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_pause);
+            binding.btnPlayPause.setImageDrawable(pauseDrawable);
+
+            int durationSec = mediaPlayer.getDuration() / 1000;
+            binding.podcastSlider.setValueTo(durationSec);
+            writeDuration(0, durationSec);
+
             mediaPlayer.start();
 
-            binding.podcastSlider.setValueTo(mediaPlayer.getDuration() / 1000);
-
-            audioSliderThread = new Thread(this);
-            audioSliderThread.start();
+            requireActivity().runOnUiThread(this);
+            //audioSliderThread = new Thread(this);
+            //audioSliderThread.start();
 
         } catch (IOException e) {
             Logs.error(this, e.getMessage());
@@ -165,13 +183,10 @@ public class PodcastBottomSheetDialogFragment extends BottomSheetDialogFragment 
     public void playPausePodcast() {
 
         if (mediaPlayer.isPlaying()) {
+            pausePodcast();
+
             Drawable playDrawable = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_play);
             binding.btnPlayPause.setImageDrawable(playDrawable);
-            if (audioSliderThread != null) {
-                audioSliderThread.interrupt();
-                audioSliderThread = null;
-            }
-            mediaPlayer.pause();
         } else {
             Drawable pauseDrawable = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_pause);
             binding.btnPlayPause.setImageDrawable(pauseDrawable);
@@ -185,8 +200,26 @@ public class PodcastBottomSheetDialogFragment extends BottomSheetDialogFragment 
         }
     }
 
-    public void skipNextPodcast() {
+    public void pausePodcast() {
+        if (audioSliderThread != null) {
+            audioSliderThread.interrupt();
+            audioSliderThread = null;
+        }
+        this.mediaPlayer.pause();
+    }
 
+    public void skipNextPodcast() {
+        pausePodcast();
+
+        this.mediaPlayer.reset();
+
+        PodcastEpisode episode = displayPodcastEpisode(this.podcast);
+
+        if (episode == null) {
+            return;
+        }
+
+        startPodcastEpisode(episode);
     }
 
     @Override
@@ -233,17 +266,16 @@ public class PodcastBottomSheetDialogFragment extends BottomSheetDialogFragment 
     @Override
     public void onDestroy() {
 
-        if (audioSliderThread != null)
+        if (audioSliderThread != null) {
             audioSliderThread.interrupt();
-
-        audioSliderThread = null;
+            audioSliderThread = null;
+        }
 
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();
+            mediaPlayer = null;
         }
-
-        mediaPlayer = null;
         
         binding.btnPlayPause.setOnClickListener(null);
 

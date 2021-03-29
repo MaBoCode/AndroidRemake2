@@ -19,4 +19,15 @@ public class PodcastEpisode implements Serializable {
     public String title;
     public String description;
 
+    @Override
+    public String toString() {
+        return "PodcastEpisode{" +
+                "duration=" + duration +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", audioUrl='" + audioUrl + '\'' +
+                ", id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }
