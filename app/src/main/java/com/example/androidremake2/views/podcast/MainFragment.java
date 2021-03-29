@@ -41,33 +41,22 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FrgMainBinding.inflate(inflater, container, false);
 
-        viewModel = new ViewModelProvider(requireActivity()).get(MainFragmentViewModel.class);
-
-        initObservers();
-
-        viewModel.getBestPodcasts();
-
         return binding.getRoot();
     }
 
-    public void displayPodcasts(List<Podcast> podcasts) {
-        RecyclerView podcastRecyclerView = binding.podcastsRecyclerView;
-        PodcastAdapter podcastAdapter = new PodcastAdapter(new Podcast.PodcastDiff(), this);
-        podcastAdapter.submitList(podcasts);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
-        layoutManager.setSmoothScrollbarEnabled(true);
-
-        podcastRecyclerView.setHasFixedSize(true);
-        podcastRecyclerView.setLayoutManager(layoutManager);
-        podcastRecyclerView.setAdapter(podcastAdapter);
-
-        SnapHelper snapHelper = new LinearSnapHelper();
-        snapHelper.attachToRecyclerView(podcastRecyclerView);
+    @Override
+    public void onStart() {
+        super.onStart();
+        viewModel.getBestPodcasts();
     }
 
     @Override
-    public void initObservers() {
+    public void initViewModels() {
+        viewModel = new ViewModelProvider(requireActivity()).get(MainFragmentViewModel.class);;
+    }
 
+    @Override
+    public void subscribeObservers() {
         viewModel.podcastsLiveData.observe(getViewLifecycleOwner(), new Observer<List<Podcast>>() {
             @Override
             public void onChanged(List<Podcast> podcasts) {
@@ -95,6 +84,21 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
                 binding.loader.setVisibility(visiblity);
             }
         });
+    }
+
+    public void displayPodcasts(List<Podcast> podcasts) {
+        RecyclerView podcastRecyclerView = binding.podcastsRecyclerView;
+        PodcastAdapter podcastAdapter = new PodcastAdapter(new Podcast.PodcastDiff(), this);
+        podcastAdapter.submitList(podcasts);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+        layoutManager.setSmoothScrollbarEnabled(true);
+
+        podcastRecyclerView.setHasFixedSize(true);
+        podcastRecyclerView.setLayoutManager(layoutManager);
+        podcastRecyclerView.setAdapter(podcastAdapter);
+
+        SnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(podcastRecyclerView);
     }
 
     @Override
