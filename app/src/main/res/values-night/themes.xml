@@ -2,25 +2,15 @@
 
     <style name="Theme.Apptemplatejava" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 
-        <item name="colorPrimary">@color/reply_blue_200</item>
-        <item name="colorPrimaryVariant">@color/reply_blue_300</item>
-        <item name="colorSecondary">@color/reply_orange_300</item>
-        <item name="colorSecondaryVariant">@color/reply_orange_300</item>
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
 
-        <item name="android:colorBackground">@color/reply_black_800</item>
-        <item name="colorSurface">@color/reply_black_900</item>
-        <item name="colorError">@color/reply_red_200</item>
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
 
-        <item name="colorOnPrimary">@color/reply_black_900</item>
-        <item name="colorOnSecondary">@color/reply_black_900</item>
-        <item name="colorOnBackground">@color/reply_white_50</item>
-        <item name="colorOnSurface">@color/reply_white_50</item>
-        <item name="colorOnError">@color/reply_black_900</item>
-
-        <item name="scrimBackground">@color/reply_black_900_alpha_087</item>
-        <item name="android:statusBarColor">@color/reply_black_900_alpha_060</item>
-
-        <item name="android:windowBackground">@color/reply_black_900_alpha_060</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
         <item name="android:fontFamily">@font/quicksand_font</item>
 
@@ -30,6 +20,15 @@
 
     <style name="Theme.Apptemplatejava.BottomSheetDialog" parent="Theme.MaterialComponents.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/Widget.Apptemplatejava.BottomSheet.Modal</item>
+    </style>
+
+    <style name="Theme.Apptemplatejava.BottomNavigationView" parent="Theme.Apptemplatejava">
+        <item name="colorPrimary">@color/white</item>
+    </style>
+
+    <style name="Theme.Apptemplatejava.PodcastCard" parent="Theme.Apptemplatejava">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="colorOnSurface">@color/white</item>
     </style>
 
 </resources>
