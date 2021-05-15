@@ -7,11 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public abstract class BaseFragment extends Fragment {
-
-    public abstract void subscribeObservers();
-
-    public abstract void initViewModels();
+public abstract class BaseFragment extends Fragment implements BaseComponent {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -20,5 +16,15 @@ public abstract class BaseFragment extends Fragment {
         initViewModels();
 
         subscribeObservers();
+    }
+
+    @Override
+    public void initViewModels() {
+
+    }
+
+    @Override
+    public void subscribeObservers() {
+
     }
 }
