@@ -1,4 +1,4 @@
-package com.example.androidremake2.views.podcast;
+package com.example.androidremake2.views.podcast.fragments;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -16,9 +16,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.core.podcast.PodcastEpisode;
-import com.example.androidremake2.core.viewmodels.PodcastBottomSheetFragmentViewModel;
 import com.example.androidremake2.databinding.DlgModalBottomSheetBinding;
 import com.example.androidremake2.injects.base.BaseComponent;
+import com.example.androidremake2.views.podcast.PodcastBottomSheetDialogFragmentArgs;
+import com.example.androidremake2.views.podcast.viewmodels.PodcastBottomSheetFragmentViewModel;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;

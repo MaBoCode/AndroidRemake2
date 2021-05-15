@@ -1,4 +1,4 @@
-package com.example.androidremake2.views.podcast;
+package com.example.androidremake2.views.podcast.utils;
 
 import android.view.LayoutInflater;
 import android.view.View;

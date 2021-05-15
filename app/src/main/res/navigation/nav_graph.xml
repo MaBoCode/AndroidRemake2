@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.androidremake2.views.podcast.MainFragment"
+        android:name="com.example.androidremake2.views.podcast.fragments.MainFragment"
         android:label="frg_main"
         tools:layout="@layout/frg_main" >
         <action
@@ -33,7 +33,7 @@
 
     <dialog
         android:id="@+id/podcastDialog"
-        android:name="com.example.androidremake2.views.podcast.PodcastBottomSheetDialogFragment"
+        android:name="com.example.androidremake2.views.podcast.fragments.PodcastBottomSheetDialogFragment"
         android:label="dlg_podcast"
         tools:layout="@layout/dlg_modal_bottom_sheet">
 
@@ -46,6 +46,12 @@
             android:id="@+id/dlg_podcast_to_frg_main"
             app:destination="@id/mainFragment" />
     </dialog>
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.androidremake2.views.search.SearchFragment"
+        android:label="frg_search"
+        tools:layout="@layout/frg_search" />
 
     <fragment
         android:id="@+id/settingsFragment"

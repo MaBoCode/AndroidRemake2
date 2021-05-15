@@ -1,4 +1,4 @@
-package com.example.androidremake2.core.viewmodels;
+package com.example.androidremake2.views.podcast.viewmodels;
 
 import android.os.Handler;
 import android.os.Looper;

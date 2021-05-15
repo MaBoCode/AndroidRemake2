@@ -1,4 +1,4 @@
-package com.example.androidremake2.views.podcast;
+package com.example.androidremake2.views.podcast.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,11 +16,15 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
+import com.example.androidremake2.R;
 import com.example.androidremake2.core.podcast.Podcast;
-import com.example.androidremake2.core.viewmodels.MainFragmentViewModel;
 import com.example.androidremake2.databinding.FrgMainBinding;
 import com.example.androidremake2.injects.base.BaseFragment;
 import com.example.androidremake2.injects.base.BaseViewModel.LoadingStatus;
+import com.example.androidremake2.views.podcast.MainFragmentDirections;
+import com.example.androidremake2.views.podcast.utils.PodcastAdapter;
+import com.example.androidremake2.views.podcast.viewmodels.MainFragmentViewModel;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.androidannotations.annotations.EFragment;
 
@@ -40,6 +44,9 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FrgMainBinding.inflate(inflater, container, false);
+
+        BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottomNavView);
+        bottomNav.setVisibility(View.VISIBLE);
 
         return binding.getRoot();
     }

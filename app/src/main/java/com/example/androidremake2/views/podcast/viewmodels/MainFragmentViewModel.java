@@ -1,4 +1,4 @@
-package com.example.androidremake2.core.viewmodels;
+package com.example.androidremake2.views.podcast.viewmodels;
 
 import androidx.hilt.Assisted;
 import androidx.lifecycle.LiveData;
