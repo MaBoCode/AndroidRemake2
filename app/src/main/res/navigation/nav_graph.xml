@@ -35,13 +35,21 @@
         android:id="@+id/podcastDialog"
         android:name="com.example.androidremake2.views.podcast.PodcastBottomSheetDialogFragment"
         android:label="dlg_podcast"
-        tools:layout="@layout/dlg_modal_bottom_sheet" >
+        tools:layout="@layout/dlg_modal_bottom_sheet">
 
-        <argument android:name="podcast" app:nullable="false" app:argType=".core.podcast.Podcast" />
+        <argument
+            android:name="podcast"
+            app:nullable="false"
+            app:argType=".core.podcast.Podcast" />
 
         <action
             android:id="@+id/dlg_podcast_to_frg_main"
             app:destination="@id/mainFragment" />
     </dialog>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.androidremake2.views.settings.SettingsFragment"
+        android:label="frg_settings" />
 
 </navigation>

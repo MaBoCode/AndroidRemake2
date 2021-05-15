@@ -6,6 +6,10 @@
     <string name="string_your_library">Your Library</string>
     <string name="string_settings">Settings</string>
     <string name="podcast_api_base_url">https://listen-api.listennotes.com/api/v2/</string>
-    <string name="podcast_title">Podcast Title</string>
-    <string name="podcast_author">Podcast Author</string>
+    <string name="podcast_title">Podcast Episode Title</string>
+    <string name="podcast_author">Podcast Title</string>
+    <string name="notification_channel_name">podcast</string>
+    <string name="notification_channel_description"></string>
+
+
 </resources>
