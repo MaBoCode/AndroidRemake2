@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class PodcastEpisode implements Serializable {
+public class PodcastEpisode implements Serializable, Comparable<PodcastEpisode> {
 
     @SerializedName("audio_length_sec")
     public Integer duration;
@@ -15,9 +15,17 @@ public class PodcastEpisode implements Serializable {
     @SerializedName("audio")
     public String audioUrl;
 
+    @SerializedName("pub_date_ms")
+    public Long publicationDateMs;
+
     public String id;
     public String title;
     public String description;
+
+    @Override
+    public int compareTo(PodcastEpisode episode) {
+        return Long.compare(this.publicationDateMs, episode.publicationDateMs);
+    }
 
     @Override
     public String toString() {
@@ -25,6 +33,7 @@ public class PodcastEpisode implements Serializable {
                 "duration=" + duration +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", audioUrl='" + audioUrl + '\'' +
+                ", publicationDateMs=" + publicationDateMs +
                 ", id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +

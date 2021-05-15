@@ -50,11 +50,19 @@ public class Podcast implements Serializable {
         this.episodes = p.episodes;
     }
 
+    public PodcastEpisode getFirstEpisode() {
+        return episodes.get(0);
+    }
+
+    public PodcastEpisode getLastEpisode() {
+        return episodes.get(episodes.size() - 1);
+    }
+
     public PodcastEpisode getNextEpisode() {
-        if (nextEpisodeIndex >= episodes.size())
+        if (nextEpisodeIndex >= episodes.size()) {
             return null;
-        int oldestEpisodeIndex = totalEpisodes - nextEpisodeIndex++ - 1;
-        return episodes.get(oldestEpisodeIndex);
+        }
+        return episodes.get(nextEpisodeIndex++);
     }
 
     @Override

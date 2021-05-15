@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
-import com.example.androidremake2.core.MainFragmentViewModel;
 import com.example.androidremake2.core.podcast.Podcast;
+import com.example.androidremake2.core.viewmodels.MainFragmentViewModel;
 import com.example.androidremake2.databinding.FrgMainBinding;
 import com.example.androidremake2.injects.base.BaseFragment;
 import com.example.androidremake2.injects.base.BaseViewModel.LoadingStatus;
@@ -47,6 +47,7 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
     @Override
     public void onStart() {
         super.onStart();
+
         viewModel.getBestPodcasts();
     }
 
@@ -96,6 +97,7 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
         podcastRecyclerView.setHasFixedSize(true);
         podcastRecyclerView.setLayoutManager(layoutManager);
         podcastRecyclerView.setAdapter(podcastAdapter);
+        podcastRecyclerView.setOnFlingListener(null);
 
         SnapHelper snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(podcastRecyclerView);
@@ -120,11 +122,17 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroyView() {
 
         viewModel.podcastLiveData.removeObservers(getViewLifecycleOwner());
         viewModel.podcastsLiveData.removeObservers(getViewLifecycleOwner());
         viewModel.loadingLiveData.removeObservers(getViewLifecycleOwner());
+
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
 
         binding = null;
 

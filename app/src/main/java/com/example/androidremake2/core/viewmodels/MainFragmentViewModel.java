@@ -1,7 +1,6 @@
-package com.example.androidremake2.core;
+package com.example.androidremake2.core.viewmodels;
 
 import androidx.hilt.Assisted;
-import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
@@ -16,11 +15,15 @@ import com.example.androidremake2.utils.Logs;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Action;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
+@HiltViewModel
 public class MainFragmentViewModel extends BaseViewModel {
 
     protected UserService userService;
@@ -35,7 +38,7 @@ public class MainFragmentViewModel extends BaseViewModel {
     protected MutableLiveData<Podcast> _podcastLiveData = new MutableLiveData<>();
     public LiveData<Podcast> podcastLiveData = _podcastLiveData;
 
-    @ViewModelInject
+    @Inject
     public MainFragmentViewModel(PodcastService podcastService, UserService userService, @Assisted SavedStateHandle savedStateHandle) {
         this.podcastService = podcastService;
         this.userService = userService;
@@ -119,6 +122,7 @@ public class MainFragmentViewModel extends BaseViewModel {
                 .subscribe(new Consumer<Podcast>() {
                     @Override
                     public void accept(Podcast podcast) throws Throwable {
+
                         _podcastLiveData.postValue(podcast);
                     }
                 }, new Consumer<Throwable>() {

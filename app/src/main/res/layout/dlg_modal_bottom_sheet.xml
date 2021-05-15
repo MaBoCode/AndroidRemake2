@@ -71,7 +71,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <TextView
-        android:id="@+id/txtPodcastTitle"
+        android:id="@+id/txtPodcastEpisodeTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/podcast_title"
@@ -83,89 +83,28 @@
         app:layout_constraintEnd_toEndOf="@id/guidelineRight" />
 
     <TextView
-        android:id="@+id/txtPodcastAuthor"
+        android:id="@+id/txtPodcastTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/podcast_author"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         android:alpha="0.6"
         android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/txtPodcastEpisodeTitle"
+        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+        app:layout_constraintEnd_toEndOf="@id/guidelineRight" />
+
+    <com.google.android.exoplayer2.ui.PlayerControlView
+        android:id="@+id/playerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        app:show_timeout="0"
+        app:show_rewind_button="false"
+        app:show_fastforward_button="false"
         app:layout_constraintTop_toBottomOf="@id/txtPodcastTitle"
-        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-        app:layout_constraintEnd_toEndOf="@id/guidelineRight"/>
-
-    <com.google.android.material.slider.Slider
-        android:id="@+id/podcastSlider"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:thumbRadius="6dp"
-        app:labelBehavior="gone"
-        android:theme="@style/Widget.Apptemplatejava.Slider"
-        app:layout_constraintTop_toBottomOf="@id/txtPodcastAuthor"
-        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
-        app:layout_constraintBottom_toTopOf="@id/podcastBtns"/>
-
-    <TextView
-        android:id="@+id/startDurationTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0:00"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-        android:theme="@style/Theme.Apptemplatejava"
-        android:layout_marginLeft="12dp"
-        app:layout_constraintTop_toBottomOf="@id/podcastSlider"
-        app:layout_constraintStart_toStartOf="@id/guidelineLeft" />
-
-    <TextView
-        android:id="@+id/endDurationTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="3:00"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-        android:theme="@style/Theme.Apptemplatejava"
-        android:layout_marginRight="12dp"
-        app:layout_constraintTop_toBottomOf="@id/podcastSlider"
-        app:layout_constraintEnd_toEndOf="@id/guidelineRight"/>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/podcastBtns"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/endDurationTxt"
-        app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-        app:layout_constraintEnd_toEndOf="@id/guidelineRight"
-        app:layout_constraintBottom_toBottomOf="@id/guidelineBottom">
-
-        <ImageView
-            android:id="@+id/btnSkipPrevious"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_skip_previous"
-            android:foreground="?attr/selectableItemBackground"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btnPlayPause"/>
-
-        <ImageView
-            android:id="@+id/btnPlayPause"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_pause"
-            android:foreground="?attr/selectableItemBackground"
-            app:layout_constraintStart_toEndOf="@id/btnSkipPrevious"
-            app:layout_constraintEnd_toStartOf="@id/btnSkipNext" />
-
-        <ImageView
-            android:id="@+id/btnSkipNext"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_skip_next"
-            android:foreground="?attr/selectableItemBackground"
-            app:layout_constraintStart_toEndOf="@id/btnPlayPause"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -52,13 +52,27 @@ def androidxTestVersion = "1.1.2"
 def rxJavaVersion = "3.0.11"
 def rxAndroidVersion = "3.0.0"
 def picassoVersion = "2.8"
+def exoPlayerVersion = "2.13.2"
+def glideVersion = "4.12.0"
+def jsoupVersion = "1.13.1"
 
 dependencies {
 
+    implementation "com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion"
+    implementation "com.google.android.exoplayer:exoplayer-dash:$exoPlayerVersion"
+    implementation "com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion"
+    implementation "com.google.android.exoplayer:extension-mediasession:$exoPlayerVersion"
+
     implementation 'com.eightbitlab:blurview:1.6.6'
+
+    implementation "org.jsoup:jsoup:$jsoupVersion"
 
     // Picasso
     implementation "com.squareup.picasso:picasso:$picassoVersion"
+
+    // Glide
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"
 
     // RxJava and RxAndroid
     implementation "io.reactivex.rxjava3:rxjava:$rxJavaVersion"
@@ -86,6 +100,8 @@ dependencies {
 
     // Android Material Components
     implementation "com.google.android.material:material:$androidMaterialVersion"
+
+    implementation "com.android.support:preference-v7:23.0.1"
 
     // UI libs
     implementation 'androidx.appcompat:appcompat:1.3.0-beta01'

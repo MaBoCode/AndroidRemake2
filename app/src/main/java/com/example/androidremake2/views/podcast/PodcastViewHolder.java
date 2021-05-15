@@ -8,6 +8,8 @@ import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.databinding.PodcastListItemBinding;
 import com.squareup.picasso.Picasso;
 
+import org.jsoup.Jsoup;
+
 public class PodcastViewHolder extends RecyclerView.ViewHolder {
 
     protected PodcastListItemBinding binding;
@@ -20,7 +22,7 @@ public class PodcastViewHolder extends RecyclerView.ViewHolder {
     public void bind(final Podcast podcast, PodcastAdapter.OnPodcastItemClickListener podcastItemClickListener) {
 
         binding.txtCardTitle.setText(podcast.title);
-        binding.txtCardDescription.setText(podcast.description);
+        binding.txtCardDescription.setText(Jsoup.parse(podcast.description).text());
         binding.btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
