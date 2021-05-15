@@ -55,7 +55,9 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
     @Override
     public void onDestroy() {
 
-        binding.searchView.setOnQueryTextFocusChangeListener(null);
+        if (binding.searchView != null) {
+            binding.searchView.setOnQueryTextFocusChangeListener(null);
+        }
 
         binding = null;
 

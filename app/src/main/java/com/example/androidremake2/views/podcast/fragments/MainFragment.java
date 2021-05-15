@@ -21,7 +21,6 @@ import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.databinding.FrgMainBinding;
 import com.example.androidremake2.injects.base.BaseFragment;
 import com.example.androidremake2.injects.base.BaseViewModel.LoadingStatus;
-import com.example.androidremake2.views.podcast.MainFragmentDirections;
 import com.example.androidremake2.views.podcast.utils.PodcastAdapter;
 import com.example.androidremake2.views.podcast.viewmodels.MainFragmentViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;

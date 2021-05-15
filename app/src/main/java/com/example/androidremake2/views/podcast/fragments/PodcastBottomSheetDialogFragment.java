@@ -18,7 +18,6 @@ import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.core.podcast.PodcastEpisode;
 import com.example.androidremake2.databinding.DlgModalBottomSheetBinding;
 import com.example.androidremake2.injects.base.BaseComponent;
-import com.example.androidremake2.views.podcast.PodcastBottomSheetDialogFragmentArgs;
 import com.example.androidremake2.views.podcast.viewmodels.PodcastBottomSheetFragmentViewModel;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
