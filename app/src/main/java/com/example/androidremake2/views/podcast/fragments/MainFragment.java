@@ -67,6 +67,9 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
         viewModel.podcastsLiveData.observe(getViewLifecycleOwner(), new Observer<List<Podcast>>() {
             @Override
             public void onChanged(List<Podcast> podcasts) {
+
+                showHideLoader(LoadingStatus.NOT_LOADING);
+
                 displayPodcasts(podcasts);
             }
         });
@@ -87,8 +90,7 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
         viewModel.loadingLiveData.observe(getViewLifecycleOwner(), new Observer<LoadingStatus>() {
             @Override
             public void onChanged(LoadingStatus status) {
-                int visiblity = status == LoadingStatus.LOADING ? View.VISIBLE : View.GONE;
-                binding.loader.setVisibility(visiblity);
+                showHideLoader(status);
             }
         });
     }

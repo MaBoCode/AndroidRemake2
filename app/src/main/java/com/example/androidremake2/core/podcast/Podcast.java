@@ -10,6 +10,12 @@ import java.util.List;
 
 public class Podcast implements Serializable {
 
+    @SerializedName(value = "title", alternate = "title_original")
+    public String title;
+
+    @SerializedName(value = "description", alternate = "description_original")
+    public String description;
+
     @SerializedName("image")
     public String imageUrl;
 
@@ -19,10 +25,10 @@ public class Podcast implements Serializable {
     @SerializedName("total_episodes")
     public int totalEpisodes;
 
-    public String id;
-    public String title;
-    public String description;
+    @SerializedName(value = "publisher", alternate = "publisher_original")
     public String publisher;
+
+    public String id;
     public String publishedAt;
     public int nextEpisodeIndex = 0;
     public List<PodcastEpisode> episodes;

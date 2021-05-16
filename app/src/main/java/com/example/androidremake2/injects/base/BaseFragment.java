@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.androidremake2.R;
+
 public abstract class BaseFragment extends Fragment implements BaseComponent {
 
     @Override
@@ -26,5 +28,10 @@ public abstract class BaseFragment extends Fragment implements BaseComponent {
     @Override
     public void subscribeObservers() {
 
+    }
+
+    public void showHideLoader(BaseViewModel.LoadingStatus status) {
+        int visiblity = status == BaseViewModel.LoadingStatus.LOADING ? View.VISIBLE : View.GONE;
+        requireActivity().findViewById(R.id.loader).setVisibility(visiblity);
     }
 }

@@ -5,6 +5,6 @@ import java.util.List;
 
 public class PodcastList implements Serializable {
 
-    public List<Podcast> podcasts;
+     public List<Podcast> podcasts;
 
 }
