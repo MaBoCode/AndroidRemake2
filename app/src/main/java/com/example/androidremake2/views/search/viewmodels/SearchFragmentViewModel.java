@@ -1,4 +1,4 @@
-package com.example.androidremake2.views.search;
+package com.example.androidremake2.views.search.viewmodels;
 
 import androidx.hilt.Assisted;
 import androidx.lifecycle.LiveData;
@@ -31,8 +31,8 @@ public class SearchFragmentViewModel extends BaseViewModel {
 
     protected String currentQuery;
 
-    protected Integer previousSearchOffset = null;
-    protected Integer nextSearchOffset = null;
+    public Integer previousSearchOffset = null;
+    public Integer nextSearchOffset = null;
 
     @Inject
     public SearchFragmentViewModel(PodcastService podcastService, @Assisted SavedStateHandle savedStateHandle) {

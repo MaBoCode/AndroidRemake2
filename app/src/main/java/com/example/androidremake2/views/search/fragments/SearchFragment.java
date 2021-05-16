@@ -1,4 +1,4 @@
-package com.example.androidremake2.views.search;
+package com.example.androidremake2.views.search.fragments;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
@@ -24,6 +24,9 @@ import com.example.androidremake2.injects.base.BaseFragment;
 import com.example.androidremake2.injects.base.BaseViewModel;
 import com.example.androidremake2.utils.DimUtils;
 import com.example.androidremake2.utils.Logs;
+import com.example.androidremake2.views.search.events.EndlessRecyclerViewScrollListener;
+import com.example.androidremake2.views.search.utils.SearchAdapter;
+import com.example.androidremake2.views.search.viewmodels.SearchFragmentViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.List;
@@ -83,7 +86,7 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
     @Override
     public boolean onQueryTextSubmit(String query) {
 
-        if (viewModel.currentQuery == null || !query.contentEquals(viewModel.currentQuery)) {
+        if (viewModel.getCurrentQuery() == null || !query.contentEquals(viewModel.getCurrentQuery())) {
             performSearch(query);
         }
         return false;

@@ -1,4 +1,4 @@
-package com.example.androidremake2.views.search;
+package com.example.androidremake2.views.search.utils;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;

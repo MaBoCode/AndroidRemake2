@@ -1,4 +1,4 @@
-package com.example.androidremake2.views.search;
+package com.example.androidremake2.views.search.events;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;

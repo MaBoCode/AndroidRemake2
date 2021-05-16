@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +19,7 @@ import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.core.podcast.PodcastEpisode;
 import com.example.androidremake2.databinding.DlgModalBottomSheetBinding;
 import com.example.androidremake2.injects.base.BaseComponent;
+import com.example.androidremake2.utils.DimUtils;
 import com.example.androidremake2.views.podcast.viewmodels.PodcastBottomSheetFragmentViewModel;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
@@ -40,26 +42,11 @@ public class PodcastBottomSheetDialogFragment extends BottomSheetDialogFragment 
     protected Podcast podcast;
     protected PodcastEpisode currentEpisode;
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        BottomSheetDialog bottomSheetDialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
-
-        bottomSheetDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                BottomSheetDialog dialog = (BottomSheetDialog) dialogInterface;
-                View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
-                BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED);
-            }
-        });
-        return bottomSheetDialog;
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DlgModalBottomSheetBinding.inflate(inflater, container, false);
+
         this.podcast = PodcastBottomSheetDialogFragmentArgs.fromBundle(getArguments()).getPodcast();
         Collections.sort(this.podcast.episodes);
         this.currentEpisode = this.podcast.getFirstEpisode();
@@ -73,6 +60,20 @@ public class PodcastBottomSheetDialogFragment extends BottomSheetDialogFragment 
         updateUI();
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Dialog dialog = getDialog();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                BottomSheetDialog dialog = (BottomSheetDialog) dialogInterface;
+                FrameLayout bottomSheet = (FrameLayout) dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                BottomSheetBehavior.from(bottomSheet).setPeekHeight((int) DimUtils.dp2px(requireContext(), 1000), true);
+            }
+        });
     }
 
     public void initPlayer() {
