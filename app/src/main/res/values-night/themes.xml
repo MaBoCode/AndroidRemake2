@@ -12,7 +12,9 @@
 
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
+        <!--
         <item name="android:fontFamily">@font/quicksand_font</item>
+        -->
 
         <item name="bottomSheetDialogTheme">@style/Theme.Apptemplatejava.BottomSheetDialog</item>
 
