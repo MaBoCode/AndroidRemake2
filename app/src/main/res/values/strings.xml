@@ -11,5 +11,7 @@
     <string name="notification_channel_name">podcast</string>
     <string name="notification_channel_description"></string>
 
+    <string name="listen_api_key">79387f0c059f4290aa717f23b2f1356c</string>
+
 
 </resources>
