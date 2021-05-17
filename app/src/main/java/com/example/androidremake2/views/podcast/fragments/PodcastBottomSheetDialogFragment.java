@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.core.podcast.PodcastEpisode;
-import com.example.androidremake2.databinding.DlgModalBottomSheetBinding;
+import com.example.androidremake2.databinding.FrgDlgModalBottomSheetBinding;
 import com.example.androidremake2.injects.base.BaseComponent;
 import com.example.androidremake2.utils.DimUtils;
 import com.example.androidremake2.views.podcast.viewmodels.PodcastBottomSheetFragmentViewModel;
@@ -33,7 +33,7 @@ import java.util.List;
 
 public class PodcastBottomSheetDialogFragment extends BottomSheetDialogFragment implements BaseComponent, Player.EventListener {
 
-    protected DlgModalBottomSheetBinding binding;
+    protected FrgDlgModalBottomSheetBinding binding;
 
     protected PodcastBottomSheetFragmentViewModel viewModel;
 
@@ -45,7 +45,7 @@ public class PodcastBottomSheetDialogFragment extends BottomSheetDialogFragment 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DlgModalBottomSheetBinding.inflate(inflater, container, false);
+        binding = FrgDlgModalBottomSheetBinding.inflate(inflater, container, false);
 
         this.podcast = PodcastBottomSheetDialogFragmentArgs.fromBundle(getArguments()).getPodcast();
         Collections.sort(this.podcast.episodes);

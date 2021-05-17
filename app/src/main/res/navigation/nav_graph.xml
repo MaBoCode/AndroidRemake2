@@ -35,7 +35,7 @@
         android:id="@+id/podcastDialog"
         android:name="com.example.androidremake2.views.podcast.fragments.PodcastBottomSheetDialogFragment"
         android:label="dlg_podcast"
-        tools:layout="@layout/dlg_modal_bottom_sheet">
+        tools:layout="@layout/frg_dlg_modal_bottom_sheet">
 
         <argument
             android:name="podcast"
