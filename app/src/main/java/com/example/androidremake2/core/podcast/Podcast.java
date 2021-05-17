@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 public class Podcast implements Serializable {
 
@@ -72,6 +73,28 @@ public class Podcast implements Serializable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Podcast podcast = (Podcast) o;
+        return totalEpisodes == podcast.totalEpisodes &&
+                nextEpisodeIndex == podcast.nextEpisodeIndex &&
+                Objects.equals(title, podcast.title) &&
+                Objects.equals(description, podcast.description) &&
+                Objects.equals(imageUrl, podcast.imageUrl) &&
+                Objects.equals(thumbnailUrl, podcast.thumbnailUrl) &&
+                Objects.equals(publisher, podcast.publisher) &&
+                Objects.equals(id, podcast.id) &&
+                Objects.equals(publishedAt, podcast.publishedAt) &&
+                Objects.equals(episodes, podcast.episodes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, description, imageUrl, thumbnailUrl, totalEpisodes, publisher, id, publishedAt, nextEpisodeIndex, episodes);
+    }
+
+    @Override
     public String toString() {
         return "Podcast{" +
                 "imageUrl='" + imageUrl + '\'' +
@@ -95,7 +118,7 @@ public class Podcast implements Serializable {
 
         @Override
         public boolean areContentsTheSame(@NonNull Podcast oldItem, @NonNull Podcast newItem) {
-            return oldItem == newItem;
+            return oldItem.equals(newItem);
         }
     }
 }
