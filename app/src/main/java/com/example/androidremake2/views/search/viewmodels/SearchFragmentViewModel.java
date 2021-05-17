@@ -40,12 +40,12 @@ public class SearchFragmentViewModel extends BaseViewModel {
         this.savedStateHandle = savedStateHandle;
     }
 
-    public void searchPodcasts(String query, String onlyIn, Integer offset) {
-        search(query, "podcast", onlyIn, offset);
+    public void searchPodcasts(String query, String onlyIn, Integer offset, String region) {
+        search(query, "podcast", onlyIn, offset, region);
     }
 
-    public void search(String query, String type, String onlyIn, Integer offset) {
-        podcastService.searchPodcasts(query, type, onlyIn, offset)
+    public void search(String query, String type, String onlyIn, Integer offset, String region) {
+        podcastService.searchPodcasts(query, type, onlyIn, offset, region)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .doOnSubscribe(new Consumer<Disposable>() {
