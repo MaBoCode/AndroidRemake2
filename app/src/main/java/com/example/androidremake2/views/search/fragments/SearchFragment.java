@@ -3,6 +3,7 @@ package com.example.androidremake2.views.search.fragments;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -43,27 +45,29 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
         @Override
         public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
             String query = viewModel.getCurrentQuery();
-            viewModel.searchPodcasts(query, "title", viewModel.nextSearchOffset);
+            viewModel.searchPodcasts(query, "title", viewModel.nextSearchOffset, "fr");
         }
     };
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        super.onCreateView(inflater, container, savedInstanceState);
+
         binding = FrgSearchBinding.inflate(inflater, container, false);
 
-        binding.searchView.setFocusedByDefault(true);
         binding.searchView.setOnQueryTextFocusChangeListener(this);
         binding.searchView.setOnQueryTextListener(this);
         binding.searchView.setOnFocusChangeListener(this);
         binding.searchView.setOnSearchClickListener(this);
 
-        setupSearchRecyclerView();
+        setupSearchResultAdapter();
 
         return binding.getRoot();
     }
 
-    public void setupSearchRecyclerView() {
+    public void setupSearchResultAdapter() {
         RecyclerView searchResultRecyclerView = binding.searchResultRecyclerView;
         this.searchAdapter = new SearchAdapter(new Podcast.PodcastDiff());
 
@@ -80,7 +84,7 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
 
     public void performSearch(String query) {
         viewModel.setCurrentQuery(query);
-        viewModel.searchPodcasts(query, "title", null);
+        viewModel.searchPodcasts(query, "title", null, "fr");
     }
 
     @Override
@@ -112,6 +116,7 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
         searchAdapter.notifyDataSetChanged();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void animateSearchView(boolean focus) {
         GradientDrawable gradientDrawable = (GradientDrawable) binding.searchView.getBackground();
         Float fromRadius = gradientDrawable.getCornerRadius();
@@ -189,8 +194,6 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
             @Override
             public void onChanged(List<Podcast> podcasts) {
 
-                Logs.debug(this, "[DBG] p: " + podcasts);
-
                 showHideLoader(BaseViewModel.LoadingStatus.NOT_LOADING);
 
                 List<Podcast> currentList = searchAdapter.getCurrentList();
@@ -199,10 +202,10 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
                     return;
                 }
 
-                if (currentList == null || currentList.isEmpty()) {
+                if (currentList.isEmpty()) {
                     searchAdapter.submitList(podcasts);
                 } else {
-                    searchAdapter.notifyItemRangeInserted(viewModel.previousSearchOffset, podcasts.size() - viewModel.previousSearchOffset);
+                    //searchAdapter.notifyItemRangeInserted(viewModel.previousSearchOffset, podcasts.size() - viewModel.previousSearchOffset);
                 }
             }
         });
