@@ -5,10 +5,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 
+import com.example.androidremake2.core.podcast.GetBestPodcastsResponse;
 import com.example.androidremake2.core.podcast.Podcast;
-import com.example.androidremake2.core.podcast.PodcastList;
 import com.example.androidremake2.core.podcast.PodcastService;
-import com.example.androidremake2.core.user.User;
 import com.example.androidremake2.core.user.UserService;
 import com.example.androidremake2.injects.base.BaseViewModel;
 import com.example.androidremake2.utils.Logs;
@@ -30,11 +29,11 @@ public class MainFragmentViewModel extends BaseViewModel {
     protected UserService userService;
     protected PodcastService podcastService;
 
-    protected MutableLiveData<List<User>> _usersLiveData = new MutableLiveData<>();
-    public LiveData<List<User>> usersLiveData = _usersLiveData;
+    protected MutableLiveData<List<Podcast>> _bestPodcastsLiveData = new MutableLiveData<>();
+    public LiveData<List<Podcast>> bestPodcastsLiveData = _bestPodcastsLiveData;
 
-    protected MutableLiveData<List<Podcast>> _podcastsLiveData = new MutableLiveData<>();
-    public LiveData<List<Podcast>> podcastsLiveData = _podcastsLiveData;
+    public MutableLiveData<Integer> nextPage = new MutableLiveData<>(1);
+    public MutableLiveData<Integer> podcastCountInPage = new MutableLiveData<>(0);
 
     protected SingleLiveEvent<Podcast> _podcastLiveData = new SingleLiveEvent<>();
     public LiveData<Podcast> podcastLiveData = _podcastLiveData;
@@ -46,8 +45,8 @@ public class MainFragmentViewModel extends BaseViewModel {
         this.savedStateHandle = savedStateHandle;
     }
 
-    public void getUsers() {
-        userService.getUsers()
+    public void getBestPodcasts(Integer page, String region) {
+        podcastService.getBestPodcasts(page, region)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -62,39 +61,26 @@ public class MainFragmentViewModel extends BaseViewModel {
                         _loadingLiveData.postValue(LoadingStatus.NOT_LOADING);
                     }
                 })
-                .subscribe(new Consumer<List<User>>() {
+                .subscribe(new Consumer<GetBestPodcastsResponse>() {
                     @Override
-                    public void accept(List<User> users) throws Throwable {
-                        _usersLiveData.postValue(users);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Throwable {
-                        Logs.error(this, throwable.getMessage());
-                    }
-                });
-    }
+                    public void accept(GetBestPodcastsResponse getBestPodcastsResponse) throws Throwable {
 
-    public void getBestPodcasts() {
-        podcastService.getBestPodcasts()
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) throws Throwable {
-                        _loadingLiveData.postValue(LoadingStatus.LOADING);
-                    }
-                })
-                .doFinally(new Action() {
-                    @Override
-                    public void run() throws Throwable {
-                        _loadingLiveData.postValue(LoadingStatus.NOT_LOADING);
-                    }
-                })
-                .subscribe(new Consumer<PodcastList>() {
-                    @Override
-                    public void accept(PodcastList podcastList) throws Throwable {
-                        _podcastsLiveData.postValue(podcastList.podcasts);
+                        List<Podcast> allPodcasts = _bestPodcastsLiveData.getValue();
+                        if (allPodcasts != null) {
+                            allPodcasts.addAll(getBestPodcastsResponse.podcasts);
+                        } else {
+                            allPodcasts = getBestPodcastsResponse.podcasts;
+                        }
+
+                        _bestPodcastsLiveData.postValue(allPodcasts);
+
+                        if (getBestPodcastsResponse.hasNext) {
+                            nextPage.postValue(getBestPodcastsResponse.nextPageNumber);
+                        } else {
+                            nextPage.postValue(null);
+                        }
+
+                        podcastCountInPage.postValue(getBestPodcastsResponse.podcasts.size());
                     }
                 }, new Consumer<Throwable>() {
                     @Override

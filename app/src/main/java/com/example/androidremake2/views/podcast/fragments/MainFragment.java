@@ -23,9 +23,11 @@ import com.example.androidremake2.injects.base.BaseFragment;
 import com.example.androidremake2.injects.base.BaseViewModel.LoadingStatus;
 import com.example.androidremake2.views.podcast.utils.PodcastAdapter;
 import com.example.androidremake2.views.podcast.viewmodels.MainFragmentViewModel;
+import com.example.androidremake2.views.search.events.EndlessRecyclerViewScrollListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.androidannotations.annotations.EFragment;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -39,31 +41,89 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
 
     protected MainFragmentViewModel viewModel;
 
+    protected PodcastAdapter podcastAdapter;
+
+    protected EndlessRecyclerViewScrollListener onScrolled = new EndlessRecyclerViewScrollListener() {
+        @Override
+        public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+            Integer nextPage = viewModel.nextPage.getValue();
+
+            if (nextPage == null) {
+                return;
+            }
+            viewModel.getBestPodcasts(nextPage, "fr");
+        }
+    };
+
     @Nullable
+    @org.jetbrains.annotations.Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+
+        super.onCreateView(inflater, container, savedInstanceState);
+
         binding = FrgMainBinding.inflate(inflater, container, false);
 
         BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottomNavView);
         bottomNav.setVisibility(View.VISIBLE);
 
+        setupPodcastAdapter();
+
         return binding.getRoot();
+    }
+
+    public void setupPodcastAdapter() {
+        RecyclerView podcastRecyclerView = binding.podcastsRecyclerView;
+        this.podcastAdapter = new PodcastAdapter(new Podcast.PodcastDiff(), this);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+        layoutManager.setSmoothScrollbarEnabled(true);
+
+        onScrolled.setmLayoutManager(layoutManager);
+
+        podcastRecyclerView.addOnScrollListener(onScrolled);
+        podcastRecyclerView.setHasFixedSize(true);
+        podcastRecyclerView.setLayoutManager(layoutManager);
+        podcastRecyclerView.setAdapter(this.podcastAdapter);
+        podcastRecyclerView.setOnFlingListener(null);
+
+        SnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(podcastRecyclerView);
+    }
+
+    @Override
+    public void onPodcastItemClick(View view, Podcast podcast) {
+        viewModel.getPodcast(podcast.id);
     }
 
     @Override
     public void initViewModels() {
-        viewModel = new ViewModelProvider(requireActivity()).get(MainFragmentViewModel.class);;
+        viewModel = new ViewModelProvider(requireActivity()).get(MainFragmentViewModel.class);
     }
 
     @Override
     public void subscribeObservers() {
-        viewModel.podcastsLiveData.observe(getViewLifecycleOwner(), new Observer<List<Podcast>>() {
+        viewModel.bestPodcastsLiveData.observe(getViewLifecycleOwner(), new Observer<List<Podcast>>() {
             @Override
             public void onChanged(List<Podcast> podcasts) {
 
                 showHideLoader(LoadingStatus.NOT_LOADING);
 
-                displayPodcasts(podcasts);
+                if (podcasts == null || podcasts.isEmpty()) {
+                    return;
+                }
+
+                List<Podcast> currentList = podcastAdapter.getCurrentList();
+
+                if (currentList.isEmpty()) {
+                    podcastAdapter.submitList(podcasts);
+                } else {
+                    Integer count = viewModel.podcastCountInPage.getValue();
+
+                    if (count != null) {
+                        podcastAdapter.notifyItemRangeInserted(currentList.size() - count, count);
+                    }
+                }
             }
         });
 
@@ -74,9 +134,7 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
 
                 MainFragmentDirections.PlayPodcastAction action = MainFragmentDirections.playPodcastAction(podcast);
 
-                if (navController != null) {
-                    navController.navigate(action);
-                }
+                navController.navigate(action);
             }
         });
 
@@ -91,49 +149,15 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
     @Override
     public void unsubscribeObservers() {
         viewModel.podcastLiveData.removeObservers(getViewLifecycleOwner());
-        viewModel.podcastsLiveData.removeObservers(getViewLifecycleOwner());
+        viewModel.bestPodcastsLiveData.removeObservers(getViewLifecycleOwner());
         viewModel.loadingLiveData.removeObservers(getViewLifecycleOwner());
-    }
-
-    public void displayPodcasts(List<Podcast> podcasts) {
-        RecyclerView podcastRecyclerView = binding.podcastsRecyclerView;
-        PodcastAdapter podcastAdapter = new PodcastAdapter(new Podcast.PodcastDiff(), this);
-        podcastAdapter.submitList(podcasts);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
-        layoutManager.setSmoothScrollbarEnabled(true);
-
-        podcastRecyclerView.setHasFixedSize(true);
-        podcastRecyclerView.setLayoutManager(layoutManager);
-        podcastRecyclerView.setAdapter(podcastAdapter);
-        podcastRecyclerView.setOnFlingListener(null);
-
-        SnapHelper snapHelper = new LinearSnapHelper();
-        snapHelper.attachToRecyclerView(podcastRecyclerView);
-    }
-
-    @Override
-    public void onPodcastItemClick(View view, Podcast podcast) {
-        viewModel.getPodcast(podcast.id);
-    }
-
-    public void startAnimations() {
-        /*
-        new AnimationUtils.Builder()
-                .setObjects(Arrays.asList(binding.usersCountTxtView, binding.usernameTxtView))
-                .setAnimateAlphaIn(true)
-                .setTranslationYBegin(-400f)
-                .setInterpolator(new FastOutSlowInInterpolator())
-                .setDelay(300)
-                .start();
-
-         */
     }
 
     @Override
     public void onStart() {
-        super.onStart();
+        viewModel.getBestPodcasts(viewModel.nextPage.getValue(), "fr");
 
-        viewModel.getBestPodcasts();
+        super.onStart();
     }
 
     @Override
