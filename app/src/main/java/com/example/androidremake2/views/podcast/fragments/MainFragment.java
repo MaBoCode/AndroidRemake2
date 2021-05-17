@@ -51,13 +51,6 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        viewModel.getBestPodcasts();
-    }
-
-    @Override
     public void initViewModels() {
         viewModel = new ViewModelProvider(requireActivity()).get(MainFragmentViewModel.class);;
     }
@@ -95,6 +88,13 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
         });
     }
 
+    @Override
+    public void unsubscribeObservers() {
+        viewModel.podcastLiveData.removeObservers(getViewLifecycleOwner());
+        viewModel.podcastsLiveData.removeObservers(getViewLifecycleOwner());
+        viewModel.loadingLiveData.removeObservers(getViewLifecycleOwner());
+    }
+
     public void displayPodcasts(List<Podcast> podcasts) {
         RecyclerView podcastRecyclerView = binding.podcastsRecyclerView;
         PodcastAdapter podcastAdapter = new PodcastAdapter(new Podcast.PodcastDiff(), this);
@@ -130,13 +130,10 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
     }
 
     @Override
-    public void onDestroyView() {
+    public void onStart() {
+        super.onStart();
 
-        viewModel.podcastLiveData.removeObservers(getViewLifecycleOwner());
-        viewModel.podcastsLiveData.removeObservers(getViewLifecycleOwner());
-        viewModel.loadingLiveData.removeObservers(getViewLifecycleOwner());
-
-        super.onDestroyView();
+        viewModel.getBestPodcasts();
     }
 
     @Override

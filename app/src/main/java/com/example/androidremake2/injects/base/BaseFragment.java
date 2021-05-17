@@ -30,8 +30,21 @@ public abstract class BaseFragment extends Fragment implements BaseComponent {
 
     }
 
+    @Override
+    public void unsubscribeObservers() {
+
+    }
+
     public void showHideLoader(BaseViewModel.LoadingStatus status) {
         int visiblity = status == BaseViewModel.LoadingStatus.LOADING ? View.VISIBLE : View.GONE;
         requireActivity().findViewById(R.id.loader).setVisibility(visiblity);
+    }
+
+    @Override
+    public void onDestroyView() {
+
+        unsubscribeObservers();
+
+        super.onDestroyView();
     }
 }

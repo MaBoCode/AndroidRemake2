@@ -41,10 +41,6 @@
             android:name="podcast"
             app:nullable="false"
             app:argType=".core.podcast.Podcast" />
-
-        <action
-            android:id="@+id/dlg_podcast_to_frg_main"
-            app:destination="@id/mainFragment" />
     </dialog>
 
     <fragment

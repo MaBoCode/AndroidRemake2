@@ -86,7 +86,6 @@ public class SearchFragmentViewModel extends BaseViewModel {
         List<Podcast> podcasts = _podcastsResultLiveData.getValue();
 
         if (podcasts == null) {
-            Logs.debug(this, "[DBG] null podcasts");
             return;
         }
         podcasts.clear();

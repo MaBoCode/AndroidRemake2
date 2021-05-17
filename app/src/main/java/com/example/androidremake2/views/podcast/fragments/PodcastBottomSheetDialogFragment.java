@@ -121,17 +121,17 @@ public class PodcastBottomSheetDialogFragment extends BottomSheetDialogFragment 
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public void initViewModels() {
         viewModel = new ViewModelProvider(this).get(PodcastBottomSheetFragmentViewModel.class);
     }
 
     @Override
     public void subscribeObservers() {
+
+    }
+
+    @Override
+    public void unsubscribeObservers() {
 
     }
 

@@ -1,9 +1,10 @@
 package com.example.androidremake2.injects.base;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
+
+import com.example.androidremake2.views.utils.events.SingleLiveEvent;
 
 public abstract class BaseViewModel extends ViewModel {
 
@@ -14,7 +15,7 @@ public abstract class BaseViewModel extends ViewModel {
 
     protected SavedStateHandle savedStateHandle;
 
-    protected MutableLiveData<LoadingStatus> _loadingLiveData = new MutableLiveData<>();
+    protected SingleLiveEvent<LoadingStatus> _loadingLiveData = new SingleLiveEvent<>();
     public LiveData<LoadingStatus> loadingLiveData = _loadingLiveData;
 
 }

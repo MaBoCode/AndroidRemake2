@@ -12,6 +12,7 @@ import com.example.androidremake2.core.user.User;
 import com.example.androidremake2.core.user.UserService;
 import com.example.androidremake2.injects.base.BaseViewModel;
 import com.example.androidremake2.utils.Logs;
+import com.example.androidremake2.views.utils.events.SingleLiveEvent;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class MainFragmentViewModel extends BaseViewModel {
     protected MutableLiveData<List<Podcast>> _podcastsLiveData = new MutableLiveData<>();
     public LiveData<List<Podcast>> podcastsLiveData = _podcastsLiveData;
 
-    protected MutableLiveData<Podcast> _podcastLiveData = new MutableLiveData<>();
+    protected SingleLiveEvent<Podcast> _podcastLiveData = new SingleLiveEvent<>();
     public LiveData<Podcast> podcastLiveData = _podcastLiveData;
 
     @Inject

@@ -4,9 +4,10 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.example.androidremake2.R;
 import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.databinding.PodcastListItemBinding;
-import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
 
@@ -30,6 +31,10 @@ public class PodcastViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        Picasso.get().load(podcast.imageUrl).into(binding.imgCardDestination);
+        Glide
+                .with(binding.getRoot())
+                .load(podcast.imageUrl)
+                .placeholder(R.drawable.ic_launcher_background)
+                .into(binding.imgCardDestination);
     }
 }
