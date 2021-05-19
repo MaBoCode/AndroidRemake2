@@ -51,7 +51,7 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
             if (nextPage == null) {
                 return;
             }
-            viewModel.getBestPodcasts(nextPage, "fr");
+            viewModel.getBestPodcasts(nextPage, "us");
         }
     };
 
@@ -155,7 +155,7 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
 
     @Override
     public void onStart() {
-        viewModel.getBestPodcasts(viewModel.nextPage.getValue(), "fr");
+        viewModel.getBestPodcasts(viewModel.nextPage.getValue(), "us");
 
         super.onStart();
     }
