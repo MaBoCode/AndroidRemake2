@@ -51,7 +51,7 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
             if (nextPage == null) {
                 return;
             }
-            viewModel.getBestPodcasts(nextPage, "fr");
+            viewModel.getBestPodcasts(nextPage, "us");
         }
     };
 
@@ -92,8 +92,21 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
     }
 
     @Override
-    public void onPodcastItemClick(View view, Podcast podcast) {
-        viewModel.getPodcast(podcast.id);
+    public void playPodcast(View view, Podcast podcast) {
+        NavController navController = Navigation.findNavController(binding.getRoot());
+
+        MainFragmentDirections.PlayPodcastAction action = MainFragmentDirections.playPodcastAction(podcast);
+
+        navController.navigate(action);
+    }
+
+    @Override
+    public void displayPodcastDetails(View view, Podcast podcast) {
+        NavController navController = Navigation.findNavController(binding.getRoot());
+
+        MainFragmentDirections.DisplayPodcastDetailsAction action = MainFragmentDirections.displayPodcastDetailsAction(podcast);
+
+        navController.navigate(action);
     }
 
     @Override
@@ -127,17 +140,6 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
             }
         });
 
-        viewModel.podcastLiveData.observe(getViewLifecycleOwner(), new Observer<Podcast>() {
-            @Override
-            public void onChanged(Podcast podcast) {
-                NavController navController = Navigation.findNavController(binding.getRoot());
-
-                MainFragmentDirections.PlayPodcastAction action = MainFragmentDirections.playPodcastAction(podcast);
-
-                navController.navigate(action);
-            }
-        });
-
         viewModel.loadingLiveData.observe(getViewLifecycleOwner(), new Observer<LoadingStatus>() {
             @Override
             public void onChanged(LoadingStatus status) {
@@ -148,14 +150,13 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
 
     @Override
     public void unsubscribeObservers() {
-        viewModel.podcastLiveData.removeObservers(getViewLifecycleOwner());
         viewModel.bestPodcastsLiveData.removeObservers(getViewLifecycleOwner());
         viewModel.loadingLiveData.removeObservers(getViewLifecycleOwner());
     }
 
     @Override
     public void onStart() {
-        viewModel.getBestPodcasts(viewModel.nextPage.getValue(), "fr");
+        viewModel.getBestPodcasts(viewModel.nextPage.getValue(), "us");
 
         super.onStart();
     }

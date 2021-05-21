@@ -16,6 +16,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,6 +28,7 @@ import com.example.androidremake2.injects.base.BaseFragment;
 import com.example.androidremake2.injects.base.BaseViewModel;
 import com.example.androidremake2.utils.DimUtils;
 import com.example.androidremake2.utils.Logs;
+import com.example.androidremake2.views.podcast.utils.PodcastAdapter;
 import com.example.androidremake2.views.search.events.EndlessRecyclerViewScrollListener;
 import com.example.androidremake2.views.search.utils.SearchAdapter;
 import com.example.androidremake2.views.search.viewmodels.SearchFragmentViewModel;
@@ -33,7 +36,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.List;
 
-public class SearchFragment extends BaseFragment implements View.OnFocusChangeListener, SearchView.OnQueryTextListener, View.OnClickListener {
+public class SearchFragment extends BaseFragment implements View.OnFocusChangeListener, SearchView.OnQueryTextListener, View.OnClickListener, PodcastAdapter.OnPodcastItemClickListener {
 
     protected FrgSearchBinding binding;
 
@@ -69,7 +72,7 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
 
     public void setupSearchResultAdapter() {
         RecyclerView searchResultRecyclerView = binding.searchResultRecyclerView;
-        this.searchAdapter = new SearchAdapter(new Podcast.PodcastDiff());
+        this.searchAdapter = new SearchAdapter(new Podcast.PodcastDiff(), this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         layoutManager.setSmoothScrollbarEnabled(true);
@@ -80,6 +83,20 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
         searchResultRecyclerView.setHasFixedSize(true);
         searchResultRecyclerView.setLayoutManager(layoutManager);
         searchResultRecyclerView.setAdapter(this.searchAdapter);
+    }
+
+    @Override
+    public void displayPodcastDetails(View view, Podcast podcast) {
+        NavController navController = Navigation.findNavController(binding.getRoot());
+
+        SearchFragmentDirections.DisplayPodcastDetailsAction action = SearchFragmentDirections.displayPodcastDetailsAction(podcast);
+
+        navController.navigate(action);
+    }
+
+    @Override
+    public void playPodcast(View view, Podcast podcast) {
+
     }
 
     public void performSearch(String query) {

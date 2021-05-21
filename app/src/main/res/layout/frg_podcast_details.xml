@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="82dp" />
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/lyAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:fitsSystemWindows="true"
+        app:elevation="0dp"
+        app:liftOnScroll="true"
+        app:liftOnScrollTargetViewId="@id/episodesRecyclerView">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:minHeight="38dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guidelineLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_begin="16dp" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guidelineRight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_end="16dp" />
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/tlbPodcastDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:elevation="0dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/podcastImgCard"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:theme="@style/Theme.Apptemplatejava.PodcastCard"
+                    app:cardCornerRadius="12dp"
+                    android:layout_gravity="center"
+                    app:layout_constraintTop_toBottomOf="@id/tlbPodcastDetails"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <ImageView
+                        android:id="@+id/podcastImg"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_launcher_background"
+                        android:contentDescription="Podcast Image" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/podcastTitleTxt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="12dp"
+                    android:text="Thirty Days of Lunch"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+                    android:textStyle="bold"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textAlignment="center"
+                    app:layout_constraintTop_toBottomOf="@id/podcastImgCard"
+                    app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                    app:layout_constraintEnd_toEndOf="@id/guidelineRight" />
+
+                <TextView
+                    android:id="@+id/podcastPublisherTxt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:text="Podcast publisher"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                    android:textColor="?android:attr/textColorPrimary"
+                    app:layout_constraintTop_toBottomOf="@id/podcastTitleTxt"
+                    app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                    app:layout_constraintEnd_toEndOf="@id/guidelineRight" />
+
+                <TextView
+                    android:id="@+id/podcastDescriptionTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="Description"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textAlignment="center"
+                    android:maxLines="2"
+                    android:alpha="0.9"
+                    android:ellipsize="end"
+                    app:layout_constraintTop_toBottomOf="@id/podcastPublisherTxt"
+                    app:layout_constraintStart_toStartOf="@id/guidelineLeft"
+                    app:layout_constraintEnd_toEndOf="@id/guidelineRight"
+                    app:layout_constraintBottom_toTopOf="@id/allEpisodesTitle" />
+
+                <TextView
+                    android:id="@+id/allEpisodesTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="All episodes"
+                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                    app:layout_constraintTop_toBottomOf="@id/podcastDescriptionTxt"
+                    app:layout_constraintStart_toStartOf="@id/guidelineLeft" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/episodesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:paddingHorizontal="16dp"
+        tools:listitem="@layout/podcast_episode_list_item"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

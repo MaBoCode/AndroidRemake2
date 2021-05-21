@@ -25,10 +25,32 @@
         android:id="@+id/mainFragment"
         android:name="com.example.androidremake2.views.podcast.fragments.MainFragment"
         android:label="frg_main"
-        tools:layout="@layout/frg_main" >
+        tools:layout="@layout/frg_main">
         <action
             android:id="@+id/play_podcast_action"
             app:destination="@id/podcastDialog" />
+
+        <action
+            android:id="@+id/display_podcast_details_action"
+            app:destination="@id/podcastDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/podcastDetailsFragment"
+        android:name="com.example.androidremake2.views.podcast.fragments.PodcastDetailsFragment"
+        android:label="frg_podcast_details"
+        tools:layout="@layout/frg_podcast_details">
+
+        <argument
+            android:name="podcast"
+            app:nullable="false"
+            app:argType=".core.podcast.Podcast" />
+
     </fragment>
 
     <dialog
@@ -41,13 +63,24 @@
             android:name="podcast"
             app:nullable="false"
             app:argType=".core.podcast.Podcast" />
+
     </dialog>
 
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.androidremake2.views.search.fragments.SearchFragment"
         android:label="frg_search"
-        tools:layout="@layout/frg_search" />
+        tools:layout="@layout/frg_search">
+
+        <action
+            android:id="@+id/display_podcast_details_action"
+            app:destination="@id/podcastDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/settingsFragment"
