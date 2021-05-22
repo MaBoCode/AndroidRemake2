@@ -87,7 +87,7 @@
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
                     android:textStyle="bold"
                     android:textColor="?android:attr/textColorPrimary"
-                    android:textAlignment="center"
+                    android:gravity="center"
                     app:layout_constraintTop_toBottomOf="@id/podcastImgCard"
                     app:layout_constraintStart_toStartOf="@id/guidelineLeft"
                     app:layout_constraintEnd_toEndOf="@id/guidelineRight" />
@@ -99,7 +99,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="8dp"
                     android:text="Podcast publisher"
-                    android:textAlignment="center"
+                    android:gravity="center"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                     android:textColor="?android:attr/textColorPrimary"
                     app:layout_constraintTop_toBottomOf="@id/podcastTitleTxt"
@@ -108,20 +108,20 @@
 
                 <TextView
                     android:id="@+id/podcastDescriptionTxt"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
                     android:text="Description"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                     android:textColor="?android:attr/textColorPrimary"
-                    android:textAlignment="center"
-                    android:maxLines="2"
+                    android:textAlignment="textStart"
                     android:alpha="0.9"
+                    android:minLines="1"
+                    android:maxLines="3"
                     android:ellipsize="end"
                     app:layout_constraintTop_toBottomOf="@id/podcastPublisherTxt"
                     app:layout_constraintStart_toStartOf="@id/guidelineLeft"
-                    app:layout_constraintEnd_toEndOf="@id/guidelineRight"
-                    app:layout_constraintBottom_toTopOf="@id/allEpisodesTitle" />
+                    app:layout_constraintEnd_toEndOf="@id/guidelineRight" />
 
                 <TextView
                     android:id="@+id/allEpisodesTitle"

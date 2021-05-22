@@ -28,6 +28,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.androidannotations.annotations.EFragment;
 import org.jetbrains.annotations.NotNull;
+import org.jsoup.Jsoup;
 
 import java.util.List;
 
@@ -56,9 +57,9 @@ public class PodcastDetailsFragment extends BaseFragment {
 
         setupActionBar();
 
-        setupPodcastEpisodesAdapter();
-
         Podcast podcast = PodcastBottomSheetDialogFragmentArgs.fromBundle(getArguments()).getPodcast();
+
+        setupPodcastEpisodesAdapter(podcast);
         displayPodcastDetails(podcast);
 
         activityViewModel.getPodcast(podcast.id);
@@ -82,9 +83,9 @@ public class PodcastDetailsFragment extends BaseFragment {
         });
     }
 
-    public void setupPodcastEpisodesAdapter() {
+    public void setupPodcastEpisodesAdapter(Podcast podcast) {
         RecyclerView episodesReyclerView = binding.episodesRecyclerView;
-        this.episodesAdapter = new PodcastEpisodesAdapter(new PodcastEpisode.PodcastEpisodeDiff());
+        this.episodesAdapter = new PodcastEpisodesAdapter(podcast, new PodcastEpisode.PodcastEpisodeDiff());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         layoutManager.setSmoothScrollbarEnabled(true);
@@ -97,7 +98,7 @@ public class PodcastDetailsFragment extends BaseFragment {
     public void displayPodcastDetails(Podcast podcast) {
         binding.podcastTitleTxt.setText(podcast.title);
         binding.podcastPublisherTxt.setText(podcast.publisher);
-        //binding.podcastDescriptionTxt.setText(Jsoup.parse(podcast.description).text());
+        binding.podcastDescriptionTxt.setText(Jsoup.parse(podcast.description).text());
 
         Glide
                 .with(binding.getRoot())
@@ -107,7 +108,6 @@ public class PodcastDetailsFragment extends BaseFragment {
     }
 
     public void displayPodcastEpisodes(List<PodcastEpisode> episodes) {
-
         if (episodes != null && !episodes.isEmpty()) {
             this.episodesAdapter.submitList(episodes);
         }

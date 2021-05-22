@@ -21,6 +21,7 @@ import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.databinding.FrgMainBinding;
 import com.example.androidremake2.injects.base.BaseFragment;
 import com.example.androidremake2.injects.base.BaseViewModel.LoadingStatus;
+import com.example.androidremake2.utils.UserUtils;
 import com.example.androidremake2.views.podcast.utils.PodcastAdapter;
 import com.example.androidremake2.views.podcast.viewmodels.MainFragmentViewModel;
 import com.example.androidremake2.views.search.events.EndlessRecyclerViewScrollListener;
@@ -51,7 +52,7 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
             if (nextPage == null) {
                 return;
             }
-            viewModel.getBestPodcasts(nextPage, "us");
+            viewModel.getBestPodcasts(nextPage, UserUtils.getUserCountryCode(requireContext()));
         }
     };
 
@@ -156,7 +157,7 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
 
     @Override
     public void onStart() {
-        viewModel.getBestPodcasts(viewModel.nextPage.getValue(), "us");
+        viewModel.getBestPodcasts(viewModel.nextPage.getValue(), UserUtils.getUserCountryCode(requireContext()));
 
         super.onStart();
     }

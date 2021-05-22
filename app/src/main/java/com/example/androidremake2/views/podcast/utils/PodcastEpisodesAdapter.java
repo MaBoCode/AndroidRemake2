@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
+import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.core.podcast.PodcastEpisode;
 import com.example.androidremake2.databinding.PodcastEpisodeListItemBinding;
 
@@ -14,8 +15,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class PodcastEpisodesAdapter extends ListAdapter<PodcastEpisode, PodcastEpisodeViewHolder> {
 
-    public PodcastEpisodesAdapter(@NotNull DiffUtil.ItemCallback<PodcastEpisode> diffCallback) {
+    protected Podcast podcast;
+
+    public PodcastEpisodesAdapter(Podcast podcast, @NotNull DiffUtil.ItemCallback<PodcastEpisode> diffCallback) {
         super(diffCallback);
+        this.podcast = podcast;
     }
 
     @NonNull
@@ -33,6 +37,6 @@ public class PodcastEpisodesAdapter extends ListAdapter<PodcastEpisode, PodcastE
     @Override
     public void onBindViewHolder(@NonNull @NotNull PodcastEpisodeViewHolder holder, int position) {
         PodcastEpisode episode = getItem(position);
-        holder.bind(episode);
+        holder.bind(podcast, episode);
     }
 }

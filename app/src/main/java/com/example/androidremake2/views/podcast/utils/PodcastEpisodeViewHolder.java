@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.androidremake2.R;
+import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.core.podcast.PodcastEpisode;
 import com.example.androidremake2.databinding.PodcastEpisodeListItemBinding;
 
@@ -22,8 +23,9 @@ public class PodcastEpisodeViewHolder extends RecyclerView.ViewHolder {
         this.binding = binding;
     }
 
-    public void bind(final PodcastEpisode episode) {
+    public void bind(final Podcast podcast, final PodcastEpisode episode) {
         binding.podcastEpisodeTitleTxt.setText(episode.title);
+        binding.podcastPublisherTxt.setText(podcast.publisher);
         binding.podcastEpisodeDescriptionTxt.setText(Jsoup.parse(episode.description).text());
 
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.FRANCE);
