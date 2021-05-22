@@ -4,11 +4,4 @@
         <item name="android:background">@drawable/bg_bottom_sheet</item>
     </style>
 
-    <style name="Widget.Apptemplatejava.Slider" parent="Widget.MaterialComponents.Slider">
-        <item name="trackColorInactive">@color/white_alpha_60</item>
-        <item name="trackColorActive">@color/white</item>
-        <item name="thumbColor">@color/white</item>
-        <item name="haloColor">@color/white_alpha_20</item>
-    </style>
-
 </resources>

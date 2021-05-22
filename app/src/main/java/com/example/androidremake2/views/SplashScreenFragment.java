@@ -41,7 +41,7 @@ public class SplashScreenFragment extends BaseFragment {
             public void run() {
                 Navigation.findNavController(binding.getRoot()).navigate(R.id.to_main_fragment);
             }
-        }, 1000);
+        }, 300);
     }
 
     @Override

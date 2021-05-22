@@ -21,7 +21,9 @@ public class PodcastAdapter extends ListAdapter<Podcast, PodcastViewHolder> {
     }
 
     public interface OnPodcastItemClickListener {
-        void onPodcastItemClick(View view, Podcast podcast);
+        void playPodcast(View view, Podcast podcast);
+
+        void displayPodcastDetails(View view, Podcast podcast);
     }
 
     @NonNull

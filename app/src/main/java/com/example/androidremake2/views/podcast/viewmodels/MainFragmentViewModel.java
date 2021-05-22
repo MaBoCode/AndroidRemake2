@@ -8,10 +8,8 @@ import androidx.lifecycle.SavedStateHandle;
 import com.example.androidremake2.core.podcast.GetBestPodcastsResponse;
 import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.core.podcast.PodcastService;
-import com.example.androidremake2.core.user.UserService;
 import com.example.androidremake2.injects.base.BaseViewModel;
 import com.example.androidremake2.utils.Logs;
-import com.example.androidremake2.views.utils.events.SingleLiveEvent;
 
 import java.util.List;
 
@@ -26,7 +24,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 @HiltViewModel
 public class MainFragmentViewModel extends BaseViewModel {
 
-    protected UserService userService;
     protected PodcastService podcastService;
 
     protected MutableLiveData<List<Podcast>> _bestPodcastsLiveData = new MutableLiveData<>();
@@ -35,13 +32,9 @@ public class MainFragmentViewModel extends BaseViewModel {
     public MutableLiveData<Integer> nextPage = new MutableLiveData<>(1);
     public MutableLiveData<Integer> podcastCountInPage = new MutableLiveData<>(0);
 
-    protected SingleLiveEvent<Podcast> _podcastLiveData = new SingleLiveEvent<>();
-    public LiveData<Podcast> podcastLiveData = _podcastLiveData;
-
     @Inject
-    public MainFragmentViewModel(PodcastService podcastService, UserService userService, @Assisted SavedStateHandle savedStateHandle) {
+    public MainFragmentViewModel(PodcastService podcastService, @Assisted SavedStateHandle savedStateHandle) {
         this.podcastService = podcastService;
-        this.userService = userService;
         this.savedStateHandle = savedStateHandle;
     }
 
@@ -81,36 +74,6 @@ public class MainFragmentViewModel extends BaseViewModel {
                         }
 
                         podcastCountInPage.postValue(getBestPodcastsResponse.podcasts.size());
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Throwable {
-                        Logs.error(this, throwable.getLocalizedMessage());
-                    }
-                });
-    }
-
-    public void getPodcast(String id) {
-        podcastService.getPodcast(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) throws Throwable {
-                        _loadingLiveData.postValue(LoadingStatus.LOADING);
-                    }
-                })
-                .doFinally(new Action() {
-                    @Override
-                    public void run() throws Throwable {
-                        _loadingLiveData.postValue(LoadingStatus.NOT_LOADING);
-                    }
-                })
-                .subscribe(new Consumer<Podcast>() {
-                    @Override
-                    public void accept(Podcast podcast) throws Throwable {
-
-                        _podcastLiveData.postValue(podcast);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
