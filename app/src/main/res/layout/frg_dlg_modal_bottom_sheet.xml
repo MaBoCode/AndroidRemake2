@@ -51,22 +51,15 @@
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toTopOf="@id/guidelineTop"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        >
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <eightbitlab.com.blurview.BlurView
+        <ImageView
+            android:id="@+id/podcastImg"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <ImageView
-                android:id="@+id/podcastImg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_launcher_background"
-                android:scaleType="centerCrop"
-                android:contentDescription="Podcast image"/>
-
-        </eightbitlab.com.blurview.BlurView>
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_launcher_background"
+            android:scaleType="centerCrop"
+            android:contentDescription="Podcast image" />
 
     </com.google.android.material.card.MaterialCardView>
 

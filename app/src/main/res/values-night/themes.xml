@@ -12,6 +12,10 @@
 
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
+        <item name="colorOnSurface">@color/white_alpha_60</item>
+
+        <item name="colorOnBackground">@color/white_alpha_20</item>
+
         <!--
         <item name="android:fontFamily">@font/quicksand_font</item>
         -->

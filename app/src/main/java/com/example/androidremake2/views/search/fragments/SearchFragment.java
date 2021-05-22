@@ -3,7 +3,6 @@ package com.example.androidremake2.views.search.fragments;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -130,7 +128,6 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
         searchAdapter.notifyDataSetChanged();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void animateSearchView(boolean focus) {
         GradientDrawable gradientDrawable = (GradientDrawable) binding.searchView.getBackground();
         Float fromRadius = gradientDrawable.getCornerRadius();
