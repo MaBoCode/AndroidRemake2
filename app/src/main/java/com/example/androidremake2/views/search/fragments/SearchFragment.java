@@ -30,7 +30,6 @@ import com.example.androidremake2.views.podcast.utils.PodcastAdapter;
 import com.example.androidremake2.views.search.events.EndlessRecyclerViewScrollListener;
 import com.example.androidremake2.views.search.utils.SearchAdapter;
 import com.example.androidremake2.views.search.viewmodels.SearchFragmentViewModel;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.List;
 
@@ -170,11 +169,10 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
 
     @Override
     public void onFocusChange(View view, boolean hasFocus) {
-        BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottomNavView);
         if (hasFocus) {
-            bottomNav.setVisibility(View.GONE);
+            hideBottomNavView();
         } else {
-            bottomNav.setVisibility(View.VISIBLE);
+            showBottomNavView();
         }
         animateSearchView(hasFocus);
     }

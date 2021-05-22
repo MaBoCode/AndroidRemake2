@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
-import com.example.androidremake2.R;
 import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.databinding.FrgMainBinding;
 import com.example.androidremake2.injects.base.BaseFragment;
@@ -25,7 +24,6 @@ import com.example.androidremake2.utils.UserUtils;
 import com.example.androidremake2.views.podcast.utils.PodcastAdapter;
 import com.example.androidremake2.views.podcast.viewmodels.MainFragmentViewModel;
 import com.example.androidremake2.views.search.events.EndlessRecyclerViewScrollListener;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.androidannotations.annotations.EFragment;
 import org.jetbrains.annotations.NotNull;
@@ -65,8 +63,7 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
 
         binding = FrgMainBinding.inflate(inflater, container, false);
 
-        BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottomNavView);
-        bottomNav.setVisibility(View.VISIBLE);
+        showBottomNavView();
 
         setupPodcastAdapter();
 
@@ -103,6 +100,9 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
 
     @Override
     public void displayPodcastDetails(View view, Podcast podcast) {
+
+        hideBottomNavView();
+
         NavController navController = Navigation.findNavController(binding.getRoot());
 
         MainFragmentDirections.DisplayPodcastDetailsAction action = MainFragmentDirections.displayPodcastDetailsAction(podcast);
@@ -160,6 +160,13 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
         viewModel.getBestPodcasts(viewModel.nextPage.getValue(), UserUtils.getUserCountryCode(requireContext()));
 
         super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        showBottomNavView();
     }
 
     @Override

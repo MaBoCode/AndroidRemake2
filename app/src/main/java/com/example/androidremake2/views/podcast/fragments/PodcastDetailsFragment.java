@@ -24,7 +24,6 @@ import com.example.androidremake2.injects.base.BaseViewModel;
 import com.example.androidremake2.views.MainActivityViewModel;
 import com.example.androidremake2.views.podcast.utils.PodcastEpisodesAdapter;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.androidannotations.annotations.EFragment;
 import org.jetbrains.annotations.NotNull;
@@ -51,9 +50,6 @@ public class PodcastDetailsFragment extends BaseFragment {
         super.onCreateView(inflater, container, savedInstanceState);
 
         binding = FrgPodcastDetailsBinding.inflate(inflater, container, false);
-
-        BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottomNavView);
-        bottomNav.setVisibility(View.GONE);
 
         setupActionBar();
 
