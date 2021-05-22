@@ -9,11 +9,15 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.databinding.SearchResultListItemBinding;
+import com.example.androidremake2.views.podcast.utils.PodcastAdapter;
 
 public class SearchAdapter extends ListAdapter<Podcast, SearchItemViewHolder> {
 
-    public SearchAdapter(@NonNull DiffUtil.ItemCallback<Podcast> diffCallback) {
+    protected PodcastAdapter.OnPodcastItemClickListener podcastItemClickListener;
+
+    public SearchAdapter(@NonNull DiffUtil.ItemCallback<Podcast> diffCallback, PodcastAdapter.OnPodcastItemClickListener podcastItemClickListener) {
         super(diffCallback);
+        this.podcastItemClickListener = podcastItemClickListener;
     }
 
     @NonNull
@@ -24,7 +28,7 @@ public class SearchAdapter extends ListAdapter<Podcast, SearchItemViewHolder> {
                 parent,
                 false
         );
-        return new SearchItemViewHolder(binding);
+        return new SearchItemViewHolder(binding, podcastItemClickListener);
     }
 
     @Override

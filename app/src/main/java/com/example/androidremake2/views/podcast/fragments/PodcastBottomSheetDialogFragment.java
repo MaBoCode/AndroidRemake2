@@ -19,6 +19,7 @@ import com.example.androidremake2.core.podcast.PodcastEpisode;
 import com.example.androidremake2.databinding.FrgDlgModalBottomSheetBinding;
 import com.example.androidremake2.injects.base.BaseBottomSheetDialogFragment;
 import com.example.androidremake2.injects.base.BaseComponent;
+import com.example.androidremake2.injects.base.BaseViewModel;
 import com.example.androidremake2.utils.DimUtils;
 import com.example.androidremake2.views.MainActivityViewModel;
 import com.example.androidremake2.views.podcast.viewmodels.PodcastBottomSheetFragmentViewModel;
@@ -46,13 +47,16 @@ public class PodcastBottomSheetDialogFragment extends BaseBottomSheetDialogFragm
 
         binding = FrgDlgModalBottomSheetBinding.inflate(inflater, container, false);
 
+        Podcast podcast = PodcastBottomSheetDialogFragmentArgs.fromBundle(getArguments()).getPodcast();
+
+        activityViewModel.getPodcast(podcast.id);
+
         return binding.getRoot();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        activityViewModel.connectToPodcastService();
     }
 
     @Override
@@ -81,7 +85,7 @@ public class PodcastBottomSheetDialogFragment extends BaseBottomSheetDialogFragm
 
     public void displayPlayingEpisode(PodcastEpisode episode) {
 
-        Podcast playingPodcast = activityViewModel.playingPodcast;
+        Podcast playingPodcast = activityViewModel.podcastLiveData.getValue();
 
         if (playingPodcast == null || episode == null) {
             return;
@@ -102,20 +106,25 @@ public class PodcastBottomSheetDialogFragment extends BaseBottomSheetDialogFragm
 
     @Override
     public void subscribeObservers() {
+        activityViewModel.podcastLiveData.observe(getViewLifecycleOwner(), new Observer<Podcast>() {
+            @Override
+            public void onChanged(Podcast podcast) {
+                PodcastEpisode playingEpisode = podcast.getFirstEpisode();
+                displayPlayingEpisode(playingEpisode);
+            }
+        });
+
         activityViewModel.playingPodcastEpisode.observe(getViewLifecycleOwner(), new Observer<PodcastEpisode>() {
             @Override
             public void onChanged(PodcastEpisode episode) {
                 displayPlayingEpisode(episode);
             }
         });
-        activityViewModel.getPodcastServiceConnection().isConnected.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isConnected) {
 
-                if (isConnected) {
-                    Podcast playingPodcast = PodcastBottomSheetDialogFragmentArgs.fromBundle(getArguments()).getPodcast();
-                    activityViewModel.playPodcast(playingPodcast);
-                }
+        activityViewModel.loadingLiveData.observe(getViewLifecycleOwner(), new Observer<BaseViewModel.LoadingStatus>() {
+            @Override
+            public void onChanged(BaseViewModel.LoadingStatus status) {
+                showHideLoader(status);
             }
         });
     }

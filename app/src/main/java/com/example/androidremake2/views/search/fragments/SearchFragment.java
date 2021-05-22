@@ -3,7 +3,6 @@ package com.example.androidremake2.views.search.fragments;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +11,11 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,15 +25,15 @@ import com.example.androidremake2.databinding.FrgSearchBinding;
 import com.example.androidremake2.injects.base.BaseFragment;
 import com.example.androidremake2.injects.base.BaseViewModel;
 import com.example.androidremake2.utils.DimUtils;
-import com.example.androidremake2.utils.Logs;
+import com.example.androidremake2.utils.UserUtils;
+import com.example.androidremake2.views.podcast.utils.PodcastAdapter;
 import com.example.androidremake2.views.search.events.EndlessRecyclerViewScrollListener;
 import com.example.androidremake2.views.search.utils.SearchAdapter;
 import com.example.androidremake2.views.search.viewmodels.SearchFragmentViewModel;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.List;
 
-public class SearchFragment extends BaseFragment implements View.OnFocusChangeListener, SearchView.OnQueryTextListener, View.OnClickListener {
+public class SearchFragment extends BaseFragment implements View.OnFocusChangeListener, SearchView.OnQueryTextListener, PodcastAdapter.OnPodcastItemClickListener {
 
     protected FrgSearchBinding binding;
 
@@ -41,11 +41,13 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
 
     protected SearchAdapter searchAdapter;
 
+    protected boolean isPodcastDetailsShown = false;
+
     protected EndlessRecyclerViewScrollListener onScrolled = new EndlessRecyclerViewScrollListener() {
         @Override
         public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
             String query = viewModel.getCurrentQuery();
-            viewModel.searchPodcasts(query, "title", viewModel.nextSearchOffset, "fr");
+            viewModel.searchPodcasts(query, "title", viewModel.nextSearchOffset, UserUtils.getUserCountryCode(requireContext()));
         }
     };
 
@@ -60,7 +62,6 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
         binding.searchView.setOnQueryTextFocusChangeListener(this);
         binding.searchView.setOnQueryTextListener(this);
         binding.searchView.setOnFocusChangeListener(this);
-        binding.searchView.setOnSearchClickListener(this);
 
         setupSearchResultAdapter();
 
@@ -69,7 +70,7 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
 
     public void setupSearchResultAdapter() {
         RecyclerView searchResultRecyclerView = binding.searchResultRecyclerView;
-        this.searchAdapter = new SearchAdapter(new Podcast.PodcastDiff());
+        this.searchAdapter = new SearchAdapter(new Podcast.PodcastDiff(), this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         layoutManager.setSmoothScrollbarEnabled(true);
@@ -82,9 +83,24 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
         searchResultRecyclerView.setAdapter(this.searchAdapter);
     }
 
+    @Override
+    public void displayPodcastDetails(View view, Podcast podcast) {
+        isPodcastDetailsShown = true;
+        NavController navController = Navigation.findNavController(binding.getRoot());
+
+        SearchFragmentDirections.DisplayPodcastDetailsAction action = SearchFragmentDirections.displayPodcastDetailsAction(podcast);
+
+        navController.navigate(action);
+    }
+
+    @Override
+    public void playPodcast(View view, Podcast podcast) {
+
+    }
+
     public void performSearch(String query) {
         viewModel.setCurrentQuery(query);
-        viewModel.searchPodcasts(query, "title", null, "fr");
+        viewModel.searchPodcasts(query, "title", viewModel.nextSearchOffset, UserUtils.getUserCountryCode(requireContext()));
     }
 
     @Override
@@ -97,26 +113,20 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
     }
 
     @Override
-    public boolean onQueryTextChange(String query) {
-        if (query.isEmpty()) {
-
-            clearAdapterData();
-
-            onScrolled.resetState();
-        } else {
-            //performSearch(query);
+    public boolean onQueryTextChange(String newText) {
+        if (newText == null || newText.isEmpty()) {
+            clearSearchResults();
         }
         return false;
     }
 
-    public void clearAdapterData() {
+    public void clearSearchResults() {
         viewModel.clearSearchResults();
 
         searchAdapter.notifyItemRangeRemoved(0, searchAdapter.getItemCount());
         searchAdapter.notifyDataSetChanged();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void animateSearchView(boolean focus) {
         GradientDrawable gradientDrawable = (GradientDrawable) binding.searchView.getBackground();
         Float fromRadius = gradientDrawable.getCornerRadius();
@@ -158,19 +168,11 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
     }
 
     @Override
-    public void onClick(View view) {
-        // On searchView search icon click
-        Logs.debug(this, "[DBG] CLICK");
-        requireActivity().getOnBackPressedDispatcher().onBackPressed();
-    }
-
-    @Override
     public void onFocusChange(View view, boolean hasFocus) {
-        BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottomNavView);
         if (hasFocus) {
-            bottomNav.setVisibility(View.GONE);
+            hideBottomNavView();
         } else {
-            bottomNav.setVisibility(View.VISIBLE);
+            showBottomNavView();
         }
         animateSearchView(hasFocus);
     }
@@ -205,7 +207,10 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
                 if (currentList.isEmpty()) {
                     searchAdapter.submitList(podcasts);
                 } else {
-                    //searchAdapter.notifyItemRangeInserted(viewModel.previousSearchOffset, podcasts.size() - viewModel.previousSearchOffset);
+                    if (viewModel.previousSearchOffset > podcasts.size()) {
+                        viewModel.previousSearchOffset = 0;
+                    }
+                    searchAdapter.notifyItemRangeInserted(viewModel.previousSearchOffset, podcasts.size() - viewModel.previousSearchOffset);
                 }
             }
         });
@@ -214,22 +219,30 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
     @Override
     public void onPause() {
 
-        if (viewModel != null && searchAdapter != null) {
-            clearAdapterData();
-        }
+        if (viewModel != null && !isPodcastDetailsShown) {
 
-        if (viewModel != null) {
             viewModel.setCurrentQuery(null);
+
+            if (searchAdapter != null) {
+                clearSearchResults();
+            }
         }
 
         super.onPause();
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        isPodcastDetailsShown = false;
+    }
+
+    @Override
     public void onDestroy() {
 
         if (viewModel != null && searchAdapter != null) {
-            clearAdapterData();
+            clearSearchResults();
         }
 
         if (binding != null) {

@@ -22,12 +22,18 @@ public class PodcastViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(final Podcast podcast, PodcastAdapter.OnPodcastItemClickListener podcastItemClickListener) {
 
+        binding.podcastCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                podcastItemClickListener.displayPodcastDetails(view, podcast);
+            }
+        });
         binding.txtCardTitle.setText(podcast.title);
         binding.txtCardDescription.setText(Jsoup.parse(podcast.description).text());
         binding.btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                podcastItemClickListener.onPodcastItemClick(view, podcast);
+                podcastItemClickListener.playPodcast(view, podcast);
             }
         });
 
