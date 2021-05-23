@@ -136,8 +136,6 @@ public abstract class BaseFragment extends Fragment implements BaseComponent {
     @Override
     public void onDestroyView() {
 
-        unsubscribeObservers();
-
         super.onDestroyView();
     }
 }

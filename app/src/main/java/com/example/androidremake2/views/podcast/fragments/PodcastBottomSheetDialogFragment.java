@@ -21,7 +21,6 @@ import com.example.androidremake2.core.podcast.PodcastEpisode;
 import com.example.androidremake2.databinding.FrgDlgModalBottomSheetBinding;
 import com.example.androidremake2.injects.base.BaseBottomSheetDialogFragment;
 import com.example.androidremake2.injects.base.BaseComponent;
-import com.example.androidremake2.injects.base.BaseViewModel;
 import com.example.androidremake2.utils.DimUtils;
 import com.example.androidremake2.views.MainActivityViewModel;
 import com.example.androidremake2.views.podcast.viewmodels.PodcastBottomSheetFragmentViewModel;
@@ -149,19 +148,10 @@ public class PodcastBottomSheetDialogFragment extends BaseBottomSheetDialogFragm
                 displayPlayingEpisode(episode);
             }
         });
-
-        activityViewModel.loadingLiveData.observe(getViewLifecycleOwner(), new Observer<BaseViewModel.LoadingStatus>() {
-            @Override
-            public void onChanged(BaseViewModel.LoadingStatus status) {
-                showHideLoader(status);
-            }
-        });
     }
 
     @Override
     public void unsubscribeObservers() {
-        activityViewModel.podcastLiveData.removeObservers(getViewLifecycleOwner());
-        activityViewModel.loadingLiveData.removeObservers(getViewLifecycleOwner());
         activityViewModel.playingEpisodeLiveData.removeObservers(getViewLifecycleOwner());
     }
 

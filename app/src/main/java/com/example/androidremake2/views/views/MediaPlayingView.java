@@ -16,7 +16,6 @@ public class MediaPlayingView extends ConstraintLayout {
 
     protected MediaPlayingViewBinding binding;
 
-
     public MediaPlayingView(@NonNull @NotNull Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs) {
         super(context, attrs);
         binding = MediaPlayingViewBinding.inflate(

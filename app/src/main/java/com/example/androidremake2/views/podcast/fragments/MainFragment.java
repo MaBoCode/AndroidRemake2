@@ -162,18 +162,17 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
             }
         });
 
-        activityViewModel.playingEpisodeLiveData.observe(getViewLifecycleOwner(), new Observer<PodcastEpisode>() {
+        viewModel.loadingLiveData.observe(getViewLifecycleOwner(), new Observer<LoadingStatus>() {
             @Override
-            public void onChanged(PodcastEpisode episode) {
-                Logs.debug(this, episode.toString());
-                displayPlayingEpisode(episode);
+            public void onChanged(LoadingStatus loadingStatus) {
+                showHideLoader(loadingStatus);
             }
         });
 
-        viewModel.loadingLiveData.observe(getViewLifecycleOwner(), new Observer<LoadingStatus>() {
+        activityViewModel.podcastLiveData.observe(getViewLifecycleOwner(), new Observer<Podcast>() {
             @Override
-            public void onChanged(LoadingStatus status) {
-                showHideLoader(status);
+            public void onChanged(Podcast podcast) {
+                Logs.debug(this, podcast.id);
             }
         });
     }
@@ -181,15 +180,13 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
     @Override
     public void unsubscribeObservers() {
         viewModel.bestPodcastsLiveData.removeObservers(getViewLifecycleOwner());
-        viewModel.loadingLiveData.removeObservers(getViewLifecycleOwner());
-        activityViewModel.playingEpisodeLiveData.removeObservers(getViewLifecycleOwner());
     }
 
     @Override
     public void onStart() {
-        viewModel.getBestPodcasts(viewModel.nextPage.getValue(), UserUtils.getUserCountryCode(requireContext()));
-
         super.onStart();
+
+        viewModel.getBestPodcasts(viewModel.nextPage.getValue(), UserUtils.getUserCountryCode(requireContext()));
     }
 
     @Override
@@ -197,13 +194,6 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
         super.onResume();
 
         showBottomNavView();
-
-        PodcastEpisode playingEpisode = activityViewModel.playingEpisodeLiveData.getValue();
-        if (playingEpisode != null) {
-            displayPlayingEpisode(playingEpisode);
-        } else {
-            Logs.debug(this, "null");
-        }
     }
 
     @Override

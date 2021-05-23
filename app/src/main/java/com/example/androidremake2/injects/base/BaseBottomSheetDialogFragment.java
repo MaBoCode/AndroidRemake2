@@ -50,8 +50,6 @@ public class BaseBottomSheetDialogFragment extends BottomSheetDialogFragment imp
     @Override
     public void onDestroyView() {
 
-        unsubscribeObservers();
-
         super.onDestroyView();
     }
 }

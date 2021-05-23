@@ -22,16 +22,30 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_end="8dp" />
 
+    <com.google.android.exoplayer2.ui.DefaultTimeBar
+        android:id="@+id/timeBar"
+        android:layout_width="0dp"
+        android:layout_height="3dp"
+        app:touch_target_height="3dp"
+        app:ad_marker_width="0dp"
+        app:bar_height="3dp"
+        app:scrubber_enabled_size="0dp"
+        app:scrubber_disabled_size="0dp"
+        app:scrubber_dragged_size="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/podcastEpisodeImg" />
+
     <ImageView
         android:id="@+id/podcastEpisodeImg"
         android:layout_width="?android:attr/actionBarSize"
         android:layout_height="?android:attr/actionBarSize"
         android:src="@drawable/ic_launcher_background"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
         android:contentDescription="Podcast Episode Image"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/timeBar"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/podcastTitleTxt"
@@ -41,6 +55,8 @@
         android:text="Podcast Title"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:textStyle="bold"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintTop_toTopOf="@id/guidelineTop"
         app:layout_constraintStart_toEndOf="@id/podcastEpisodeImg"
         app:layout_constraintEnd_toStartOf="@id/smallPlayerControlView" />
@@ -53,6 +69,8 @@
         android:text="Podcast Publisher"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
         android:textStyle="bold"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintStart_toEndOf="@id/podcastEpisodeImg"
         app:layout_constraintEnd_toStartOf="@id/smallPlayerControlView"
         app:layout_constraintBottom_toBottomOf="@id/guidelineBottom" />

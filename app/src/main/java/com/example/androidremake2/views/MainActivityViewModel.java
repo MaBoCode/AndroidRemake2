@@ -80,6 +80,8 @@ public class MainActivityViewModel extends BaseViewModel implements Player.Event
     }
 
     public void playEpisodes(List<PodcastEpisode> episodes) {
+        this.exoPlayer.stop();
+
         List<MediaItem> mediaItems = new ArrayList<>();
         for (PodcastEpisode episode : episodes) {
             MediaItem mediaItem = new MediaItem.Builder()
@@ -112,7 +114,6 @@ public class MainActivityViewModel extends BaseViewModel implements Player.Event
                 .subscribe(new Consumer<Podcast>() {
                     @Override
                     public void accept(Podcast podcast) throws Throwable {
-
                         _podcastLiveData.postValue(podcast);
                     }
                 }, new Consumer<Throwable>() {
@@ -159,6 +160,14 @@ public class MainActivityViewModel extends BaseViewModel implements Player.Event
         });
 
          */
+    }
+
+    public void stopPlayer() {
+        this.exoPlayer.stop();
+
+        if (this.exoPlayer.getMediaItemCount() > 0) {
+            this.exoPlayer.removeMediaItems(0, this.exoPlayer.getMediaItemCount() - 1);
+        }
     }
 
     public ExoPlayer getExoPlayer() {

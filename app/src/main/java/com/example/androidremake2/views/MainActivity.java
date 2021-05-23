@@ -21,6 +21,8 @@ public class MainActivity extends BaseActivity {
 
     protected ActMainBinding binding;
 
+    protected MainActivityViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +35,4 @@ public class MainActivity extends BaseActivity {
         NavController navController = Navigation.findNavController(this, R.id.frg_nav_host);
         NavigationUI.setupWithNavController(binding.bottomNavView, navController);
     }
-
-
 }
