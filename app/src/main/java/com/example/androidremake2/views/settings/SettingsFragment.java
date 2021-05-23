@@ -4,12 +4,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.example.androidremake2.R;
+import com.example.androidremake2.utils.Logs;
 import com.example.androidremake2.utils.Prefs;
 import com.example.androidremake2.utils.ThemeUtils;
+import com.example.androidremake2.views.utils.AnimationUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.Arrays;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -17,10 +22,22 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onStart() {
         super.onStart();
 
+        Logs.debug(this, "");
+
         BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottomNavView);
-        if (bottomNav.getVisibility() == View.GONE) {
-            bottomNav.setVisibility(View.VISIBLE);
+
+        if (bottomNav.getVisibility() == View.VISIBLE) {
+            return;
         }
+
+        bottomNav.setVisibility(View.VISIBLE);
+
+        new AnimationUtils.Builder()
+                .setObjects(Arrays.asList(bottomNav))
+                .setAnimateAlphaIn(true)
+                .setTranslationYBegin(100f)
+                .setInterpolator(new FastOutSlowInInterpolator())
+                .start();
     }
 
     @Override
