@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:animateLayoutChanges="true">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineTop"
@@ -88,6 +89,8 @@
                     android:textStyle="bold"
                     android:textColor="?android:attr/textColorPrimary"
                     android:gravity="center"
+                    android:maxLines="3"
+                    android:ellipsize="end"
                     app:layout_constraintTop_toBottomOf="@id/podcastImgCard"
                     app:layout_constraintStart_toStartOf="@id/guidelineLeft"
                     app:layout_constraintEnd_toEndOf="@id/guidelineRight" />
@@ -102,6 +105,8 @@
                     android:gravity="center"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                     android:textColor="?android:attr/textColorPrimary"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     app:layout_constraintTop_toBottomOf="@id/podcastTitleTxt"
                     app:layout_constraintStart_toStartOf="@id/guidelineLeft"
                     app:layout_constraintEnd_toEndOf="@id/guidelineRight" />

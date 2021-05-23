@@ -13,6 +13,7 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 import com.example.androidremake2.R;
 import com.example.androidremake2.views.utils.AnimationUtils;
+import com.example.androidremake2.views.views.MediaPlayingView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
@@ -92,10 +93,48 @@ public abstract class BaseFragment extends Fragment implements BaseComponent {
         }, AnimationUtils.ANIMATION_DURATION);
     }
 
+    public void showMediaPlayingView() {
+        MediaPlayingView mediaPlayingView = requireActivity().findViewById(R.id.mediaPlayingView);
+
+        if (mediaPlayingView.getVisibility() == View.VISIBLE) {
+            return;
+        }
+
+        mediaPlayingView.setVisibility(View.VISIBLE);
+
+        new AnimationUtils.Builder()
+                .setObjects(Arrays.asList(mediaPlayingView))
+                .setAnimateAlphaIn(true)
+                .setTranslationYBegin(100f)
+                .setInterpolator(new FastOutSlowInInterpolator())
+                .start();
+    }
+
+    public void hideMediaPlayingView() {
+        MediaPlayingView mediaPlayingView = requireActivity().findViewById(R.id.mediaPlayingView);
+
+        if (mediaPlayingView.getVisibility() == View.GONE) {
+            return;
+        }
+
+        new AnimationUtils.Builder()
+                .setObjects(Arrays.asList(mediaPlayingView))
+                .setAnimateAlphaOut(true)
+                .setTranslationYEnd(100f)
+                .setInterpolator(new FastOutSlowInInterpolator())
+                .start();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mediaPlayingView.setVisibility(View.VISIBLE);
+
+            }
+        }, AnimationUtils.ANIMATION_DURATION);
+    }
+
     @Override
     public void onDestroyView() {
-
-        unsubscribeObservers();
 
         super.onDestroyView();
     }

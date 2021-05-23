@@ -14,7 +14,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Apptemplatejava">
-        <activity android:name=".views.MainActivity_">
+
+        <!-- ACTIVITIES -->
+
+        <activity
+            android:name=".views.MainActivity_"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.SEARCH" />
@@ -26,6 +31,24 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/search_podcast" />
         </activity>
+
+        <!-- SERVICES -->
+
+        <service android:name=".services.podcast.PodcastForegroundService">
+
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
+
+        <!-- RECEIVERS -->
+
+        <receiver android:name="androidx.media.session.MediaButtonReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

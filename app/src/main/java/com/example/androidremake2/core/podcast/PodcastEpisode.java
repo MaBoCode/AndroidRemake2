@@ -26,6 +26,16 @@ public class PodcastEpisode implements Serializable, Comparable<PodcastEpisode> 
     public String title;
     public String description;
 
+    public PodcastEpisode(Integer duration, String imageUrl, String audioUrl, Long publicationDateMs, String id, String title, String description) {
+        this.duration = duration;
+        this.imageUrl = imageUrl;
+        this.audioUrl = audioUrl;
+        this.publicationDateMs = publicationDateMs;
+        this.id = id;
+        this.title = title;
+        this.description = description;
+    }
+
     @Override
     public int compareTo(PodcastEpisode episode) {
         return Long.compare(this.publicationDateMs, episode.publicationDateMs);
