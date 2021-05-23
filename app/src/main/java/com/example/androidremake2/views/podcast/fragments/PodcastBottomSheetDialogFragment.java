@@ -80,12 +80,23 @@ public class PodcastBottomSheetDialogFragment extends BaseBottomSheetDialogFragm
             @Override
             public void onShow(DialogInterface dialogInterface) {
                 BottomSheetDialog dialog = (BottomSheetDialog) dialogInterface;
-                FrameLayout bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 
-                if (bottomSheet == null) {
-                    return;
+                View bottomSheetChildView = binding.podcastBottomSheet;
+                ViewGroup.LayoutParams params = bottomSheetChildView.getLayoutParams();
+                BottomSheetBehavior<FrameLayout> bottomSheetBehavior = dialog.getBehavior();
+                boolean fitToContents = true;
+                float halfExpandedRatio = 0.5f;
+                int windowHeight = DimUtils.getWindowHeight(requireActivity(), binding.getRoot());
+                if (params != null) {
+                    params.height = windowHeight;
+                    fitToContents = false;
+                    halfExpandedRatio = 0.9f;
                 }
-                BottomSheetBehavior.from(bottomSheet).setPeekHeight((int) DimUtils.dp2px(requireContext(), 1000), true);
+                bottomSheetChildView.setLayoutParams(params);
+                bottomSheetBehavior.setFitToContents(fitToContents);
+                bottomSheetBehavior.setHalfExpandedRatio(halfExpandedRatio);
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                bottomSheetBehavior.setSkipCollapsed(true);
             }
         });
     }
