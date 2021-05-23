@@ -48,8 +48,8 @@
 
     <ImageButton
         android:id="@+id/exo_shuffle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:src="@drawable/exo_controls_shuffle_off"
         android:background="@android:color/transparent"
         app:layout_constraintTop_toBottomOf="@id/exo_position"
@@ -59,8 +59,8 @@
 
     <View
         android:id="@+id/exo_prev"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
         android:background="@drawable/exo_styled_controls_previous"
         app:layout_constraintTop_toBottomOf="@id/exo_position"
         app:layout_constraintStart_toStartOf="@id/guidelineLeft"
@@ -89,8 +89,8 @@
 
     <View
         android:id="@+id/exo_next"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
         android:background="@drawable/exo_styled_controls_next"
         app:layout_constraintTop_toBottomOf="@id/exo_position"
         app:layout_constraintStart_toStartOf="@id/guidelineRight"
@@ -99,8 +99,8 @@
 
     <ImageButton
         android:id="@+id/exo_repeat_toggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:src="@drawable/exo_controls_repeat_off"
         android:background="@android:color/transparent"
         app:layout_constraintTop_toBottomOf="@id/exo_position"

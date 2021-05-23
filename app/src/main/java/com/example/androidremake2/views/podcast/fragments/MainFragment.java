@@ -70,6 +70,24 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
 
         binding = FrgMainBinding.inflate(inflater, container, false);
 
+        MediaPlayingView mediaPlayingView = requireActivity().findViewById(R.id.mediaPlayingView);
+        mediaPlayingView.getBinding().getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavController navController = Navigation.findNavController(binding.getRoot());
+
+                Podcast podcast = activityViewModel.podcastLiveData.getValue();
+
+                if (podcast == null) {
+                    return;
+                }
+
+                MainFragmentDirections.PlayPodcastAction action = MainFragmentDirections.playPodcastAction(podcast);
+
+                navController.navigate(action);
+            }
+        });
+
         showBottomNavView();
 
         setupPodcastAdapter();
