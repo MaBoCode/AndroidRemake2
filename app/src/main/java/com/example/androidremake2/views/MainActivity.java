@@ -33,4 +33,6 @@ public class MainActivity extends BaseActivity {
         NavController navController = Navigation.findNavController(this, R.id.frg_nav_host);
         NavigationUI.setupWithNavController(binding.bottomNavView, navController);
     }
+
+
 }

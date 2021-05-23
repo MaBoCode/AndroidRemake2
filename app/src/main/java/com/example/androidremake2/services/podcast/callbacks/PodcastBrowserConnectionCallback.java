@@ -23,7 +23,6 @@ public class PodcastBrowserConnectionCallback extends MediaBrowserCompat.Connect
         Logs.debug(this, "connected to PodcastService");
         MediaBrowserCompat mediaBrowser = serviceConnection.getMediaBrowser();
 
-
         MediaControllerCompat mediaController = new MediaControllerCompat(context, mediaBrowser.getSessionToken());
         mediaController.registerCallback(new PodcastControllerCallback(serviceConnection));
 

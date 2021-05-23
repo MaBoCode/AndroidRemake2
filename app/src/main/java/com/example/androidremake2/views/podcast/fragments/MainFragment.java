@@ -16,14 +16,20 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
+import com.bumptech.glide.Glide;
+import com.example.androidremake2.R;
 import com.example.androidremake2.core.podcast.Podcast;
+import com.example.androidremake2.core.podcast.PodcastEpisode;
 import com.example.androidremake2.databinding.FrgMainBinding;
 import com.example.androidremake2.injects.base.BaseFragment;
 import com.example.androidremake2.injects.base.BaseViewModel.LoadingStatus;
+import com.example.androidremake2.utils.Logs;
 import com.example.androidremake2.utils.UserUtils;
+import com.example.androidremake2.views.MainActivityViewModel;
 import com.example.androidremake2.views.podcast.utils.PodcastAdapter;
 import com.example.androidremake2.views.podcast.viewmodels.MainFragmentViewModel;
 import com.example.androidremake2.views.search.events.EndlessRecyclerViewScrollListener;
+import com.example.androidremake2.views.views.MediaPlayingView;
 
 import org.androidannotations.annotations.EFragment;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +44,7 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
 
     protected FrgMainBinding binding;
 
+    protected MainActivityViewModel activityViewModel;
     protected MainFragmentViewModel viewModel;
 
     protected PodcastAdapter podcastAdapter;
@@ -91,6 +98,9 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
 
     @Override
     public void playPodcast(View view, Podcast podcast) {
+
+        showMediaPlayingView();
+
         NavController navController = Navigation.findNavController(binding.getRoot());
 
         MainFragmentDirections.PlayPodcastAction action = MainFragmentDirections.playPodcastAction(podcast);
@@ -110,8 +120,19 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
         navController.navigate(action);
     }
 
+    public void displayPlayingEpisode(PodcastEpisode episode) {
+        MediaPlayingView mediaPlayingView = requireActivity().findViewById(R.id.mediaPlayingView);
+        mediaPlayingView.getBinding().podcastTitleTxt.setText(episode.title);
+
+        Glide
+                .with(mediaPlayingView)
+                .load(episode.imageUrl)
+                .into(mediaPlayingView.getBinding().podcastEpisodeImg);
+    }
+
     @Override
     public void initViewModels() {
+        activityViewModel = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
         viewModel = new ViewModelProvider(requireActivity()).get(MainFragmentViewModel.class);
     }
 
@@ -141,6 +162,14 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
             }
         });
 
+        activityViewModel.playingEpisodeLiveData.observe(getViewLifecycleOwner(), new Observer<PodcastEpisode>() {
+            @Override
+            public void onChanged(PodcastEpisode episode) {
+                Logs.debug(this, episode.toString());
+                displayPlayingEpisode(episode);
+            }
+        });
+
         viewModel.loadingLiveData.observe(getViewLifecycleOwner(), new Observer<LoadingStatus>() {
             @Override
             public void onChanged(LoadingStatus status) {
@@ -153,6 +182,7 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
     public void unsubscribeObservers() {
         viewModel.bestPodcastsLiveData.removeObservers(getViewLifecycleOwner());
         viewModel.loadingLiveData.removeObservers(getViewLifecycleOwner());
+        activityViewModel.playingEpisodeLiveData.removeObservers(getViewLifecycleOwner());
     }
 
     @Override
@@ -167,6 +197,13 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
         super.onResume();
 
         showBottomNavView();
+
+        PodcastEpisode playingEpisode = activityViewModel.playingEpisodeLiveData.getValue();
+        if (playingEpisode != null) {
+            displayPlayingEpisode(playingEpisode);
+        } else {
+            Logs.debug(this, "null");
+        }
     }
 
     @Override

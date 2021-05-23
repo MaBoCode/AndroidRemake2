@@ -24,10 +24,11 @@ public class PlayerEventListener implements Player.EventListener {
 
     @Override
     public void onPlaybackStateChanged(int state) {
-        Logs.debug(this, "");
         if (state == Player.STATE_BUFFERING || state == Player.STATE_READY) {
+            Logs.debug(this, "show notification");
             service.getNotificationManager().showNotificationForPLayer(service.getExoPlayer());
         } else {
+            Logs.debug(this, "hide notification");
             service.getNotificationManager().hideNotification();
         }
     }

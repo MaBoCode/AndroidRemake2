@@ -17,6 +17,6 @@ public class PodcastQueueNavigator extends TimelineQueueNavigator {
 
     @Override
     public MediaDescriptionCompat getMediaDescription(Player player, int windowIndex) {
-        return service.getCurrentEpisodes().get(windowIndex).getDescription();
+        return service.episodes.get(windowIndex).getDescription();
     }
 }

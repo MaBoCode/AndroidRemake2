@@ -52,6 +52,15 @@ public class PodcastServiceConnection {
                 podcastBrowserConnectionCallback,
                 null
         );
+        //this.mediaBrowser.connect();
+    }
+
+    public void subscribe(String parentId, MediaBrowserCompat.SubscriptionCallback callback) {
+        this.mediaBrowser.subscribe(parentId, callback);
+    }
+
+    public void unsubscribe(String parentId, MediaBrowserCompat.SubscriptionCallback callback) {
+        this.mediaBrowser.unsubscribe(parentId, callback);
     }
 
     public boolean isPlaying() {

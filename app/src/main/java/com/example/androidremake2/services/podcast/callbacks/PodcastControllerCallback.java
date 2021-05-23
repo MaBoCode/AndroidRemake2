@@ -1,10 +1,12 @@
 package com.example.androidremake2.services.podcast.callbacks;
 
+import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.example.androidremake2.services.podcast.PodcastServiceConnection;
+import com.example.androidremake2.utils.Logs;
 
 public class PodcastControllerCallback extends MediaControllerCompat.Callback {
 
@@ -25,6 +27,7 @@ public class PodcastControllerCallback extends MediaControllerCompat.Callback {
 
     @Override
     public void onMetadataChanged(MediaMetadataCompat metadata) {
+        Logs.debug(this, metadata.toString());
         if (metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID) == null) {
             serviceConnection.setNowPlaying(PodcastServiceConnection.NOTHING_PLAYING);
         } else {
@@ -37,6 +40,11 @@ public class PodcastControllerCallback extends MediaControllerCompat.Callback {
         serviceConnection.getPodcastBrowserConnectionCallback().onConnectionSuspended();
     }
 
-    // TODO: handle network failure
+    @Override
+    public void onSessionEvent(String event, Bundle extras) {
+        super.onSessionEvent(event, extras);
+        // TODO: handle network failure
+        Logs.debug(this, event);
+    }
 
 }

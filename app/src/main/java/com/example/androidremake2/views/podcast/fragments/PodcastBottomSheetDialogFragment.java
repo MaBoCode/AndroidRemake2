@@ -3,6 +3,7 @@ package com.example.androidremake2.views.podcast.fragments;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.media.MediaBrowserCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.example.androidremake2.R;
 import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.core.podcast.PodcastEpisode;
 import com.example.androidremake2.databinding.FrgDlgModalBottomSheetBinding;
@@ -23,16 +25,24 @@ import com.example.androidremake2.injects.base.BaseViewModel;
 import com.example.androidremake2.utils.DimUtils;
 import com.example.androidremake2.views.MainActivityViewModel;
 import com.example.androidremake2.views.podcast.viewmodels.PodcastBottomSheetFragmentViewModel;
+import com.example.androidremake2.views.views.MediaPlayingView;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.Player;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.androidannotations.annotations.EFragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 @EFragment
-public class PodcastBottomSheetDialogFragment extends BaseBottomSheetDialogFragment implements BaseComponent {
+public class PodcastBottomSheetDialogFragment extends BaseBottomSheetDialogFragment
+        implements BaseComponent, Player.EventListener {
 
     protected FrgDlgModalBottomSheetBinding binding;
 
@@ -47,16 +57,14 @@ public class PodcastBottomSheetDialogFragment extends BaseBottomSheetDialogFragm
 
         binding = FrgDlgModalBottomSheetBinding.inflate(inflater, container, false);
 
+        ExoPlayer exoPlayer = activityViewModel.getExoPlayer();
+        binding.playerView.setPlayer(exoPlayer);
+
         Podcast podcast = PodcastBottomSheetDialogFragmentArgs.fromBundle(getArguments()).getPodcast();
 
         activityViewModel.getPodcast(podcast.id);
 
         return binding.getRoot();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 
     @Override
@@ -84,12 +92,19 @@ public class PodcastBottomSheetDialogFragment extends BaseBottomSheetDialogFragm
     }
 
     public void displayPlayingEpisode(PodcastEpisode episode) {
-
         Podcast playingPodcast = activityViewModel.podcastLiveData.getValue();
 
         if (playingPodcast == null || episode == null) {
             return;
         }
+
+        MediaPlayingView mediaPlayingView = requireActivity().findViewById(R.id.mediaPlayingView);
+        mediaPlayingView.getBinding().smallPlayerControlView.setPlayer(activityViewModel.getExoPlayer());
+        mediaPlayingView.getBinding().podcastTitleTxt.setText(episode.title);
+        Glide
+                .with(mediaPlayingView)
+                .load(episode.imageUrl)
+                .into(mediaPlayingView.getBinding().podcastEpisodeImg);
 
         binding.txtPodcastTitle.setText(playingPodcast.title);
         binding.txtPodcastEpisodeTitle.setText(episode.title);
@@ -109,12 +124,26 @@ public class PodcastBottomSheetDialogFragment extends BaseBottomSheetDialogFragm
         activityViewModel.podcastLiveData.observe(getViewLifecycleOwner(), new Observer<Podcast>() {
             @Override
             public void onChanged(Podcast podcast) {
-                PodcastEpisode playingEpisode = podcast.getFirstEpisode();
-                displayPlayingEpisode(playingEpisode);
+                activityViewModel.playEpisodes(podcast.episodes);
             }
         });
 
-        activityViewModel.playingPodcastEpisode.observe(getViewLifecycleOwner(), new Observer<PodcastEpisode>() {
+        activityViewModel.episodesMediaItems.observe(getViewLifecycleOwner(), new Observer<List<MediaBrowserCompat.MediaItem>>() {
+            @Override
+            public void onChanged(List<MediaBrowserCompat.MediaItem> mediaItems) {
+
+                List<MediaItem> exoMediaItems = new ArrayList<>();
+                for (MediaBrowserCompat.MediaItem mediaItem : mediaItems) {
+                    MediaItem item = new MediaItem.Builder()
+                            .setMediaId(mediaItem.getMediaId())
+                            .setUri(mediaItem.getDescription().getMediaUri())
+                            .build();
+                    exoMediaItems.add(item);
+                }
+            }
+        });
+
+        activityViewModel.playingEpisodeLiveData.observe(getViewLifecycleOwner(), new Observer<PodcastEpisode>() {
             @Override
             public void onChanged(PodcastEpisode episode) {
                 displayPlayingEpisode(episode);
@@ -131,7 +160,9 @@ public class PodcastBottomSheetDialogFragment extends BaseBottomSheetDialogFragm
 
     @Override
     public void unsubscribeObservers() {
-        activityViewModel.playingPodcastEpisode.removeObservers(getViewLifecycleOwner());
+        activityViewModel.podcastLiveData.removeObservers(getViewLifecycleOwner());
+        activityViewModel.loadingLiveData.removeObservers(getViewLifecycleOwner());
+        activityViewModel.playingEpisodeLiveData.removeObservers(getViewLifecycleOwner());
     }
 
     @Override

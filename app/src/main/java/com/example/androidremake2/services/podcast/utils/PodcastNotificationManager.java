@@ -5,14 +5,13 @@ import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 
 import com.example.androidremake2.R;
-import com.google.android.exoplayer2.DefaultControlDispatcher;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 
 public class PodcastNotificationManager {
 
     protected final static String PLAYBACK_CHANNEL_ID = "playback_channel";
-    protected final static int PLAYBACK_NOTIFICATION_ID = 1;
+    public final static int PLAYBACK_NOTIFICATION_ID = 1;
 
     protected Context context;
 
@@ -40,7 +39,6 @@ public class PodcastNotificationManager {
         );
         this.notificationManager.setMediaSessionToken(sessionToken);
         this.notificationManager.setSmallIcon(R.drawable.exo_notification_small_icon);
-        this.notificationManager.setControlDispatcher(new DefaultControlDispatcher(0, 0));
     }
 
     public void showNotificationForPLayer(ExoPlayer player) {
