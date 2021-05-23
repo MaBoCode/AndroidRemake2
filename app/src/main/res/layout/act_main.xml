@@ -21,7 +21,7 @@
     <com.example.androidremake2.views.views.MediaPlayingView
         android:id="@+id/mediaPlayingView"
         android:layout_width="0dp"
-        android:layout_height="?android:attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:alpha="0"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
