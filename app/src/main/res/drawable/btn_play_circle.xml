@@ -3,7 +3,7 @@
     <item>
         <shape
             android:shape="oval"
-            android:tint="@color/black_alpha_60"></shape>
+            android:tint="?attr/colorControlNormal" />
     </item>
     <item
         android:width="48dp"

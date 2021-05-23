@@ -3,6 +3,18 @@
 
     <style name="Widget.Apptemplatejava.BottomSheet.Modal" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bg_bottom_sheet</item>
+        <item name="paddingBottomSystemWindowInsets">true</item>
     </style>
+
+    <style name="Theme.Apptemplatejava.PodcastEpisodeListItem">
+        <item name="android:background">@drawable/bg_podcast_episode</item>
+        <item name="android:backgroundTint">@color/reply_blue_100</item>
+    </style>
+
+    <style name="Theme.Apptemplatejava.SearchView">
+        <item name="android:background">@drawable/bg_search_view_default</item>
+        <item name="android:backgroundTint">@color/reply_blue_100</item>
+    </style>
+
 
 </resources>

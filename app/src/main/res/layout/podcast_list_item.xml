@@ -5,16 +5,16 @@
     android:layout_width="332dp"
     android:layout_height="268dp"
     android:layout_marginEnd="16dp"
-    android:theme="@style/Theme.Apptemplatejava.PodcastCard"
     app:cardElevation="0dp"
     app:cardCornerRadius="@dimen/card_corner_radius"
     android:clickable="true"
-    android:focusable="true" >
+    android:focusable="true"
+    android:theme="@style/Theme.Apptemplatejava.PodcastListItem">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/lyDestinationCard"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineBottom"
@@ -55,9 +55,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Thirty Days of Lunch"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            android:textAppearance="@style/TextAppearance.Reply.Headline5"
             android:textStyle="bold"
-            android:textColor="?android:attr/textColorPrimary"
             app:layout_constraintStart_toStartOf="@id/guidelineLeft"
             app:layout_constraintEnd_toEndOf="@id/guidelineRight"
             app:layout_constraintBottom_toTopOf="@id/txtCardDescription" />
@@ -67,8 +66,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Reinventing life, one lunch at a time."
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-            android:textColor="?android:attr/textColorPrimary"
+            android:textAppearance="@style/TextAppearance.Reply.Caption"
             android:alpha="0.9"
             android:maxLines="1"
             android:ellipsize="end"
@@ -81,11 +79,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Play"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-            android:textStyle="bold"
-            android:textColor="?android:attr/textColorPrimary"
             style="?attr/materialButtonOutlinedStyle"
-            app:strokeColor="?attr/colorOnSurface"
+            android:textAppearance="@style/TextAppearance.Reply.Body2"
+            android:textColor="@color/reply_white_50"
+            android:textStyle="bold"
+            app:strokeColor="@color/reply_white_50"
             app:cornerRadius="100dp"
             android:backgroundTint="@color/play_btn_color"
             app:layout_constraintStart_toStartOf="@id/guidelineRight"

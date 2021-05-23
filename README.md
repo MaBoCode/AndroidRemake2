@@ -1,6 +1,6 @@
 # AndroidRemake2
 
-<img src="screenshots/podcast-app-wip.gif" alt="App Demo"/>
+<img width="" src="screenshots/podcast-app-wip.gif" alt="App Demo"/>
 
 Remake inspired by Rifqy Aulia Ramadhan:
 

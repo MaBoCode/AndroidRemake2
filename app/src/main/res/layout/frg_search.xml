@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             android:background="@android:color/transparent"
+            android:outlineAmbientShadowColor="@android:color/transparent"
             app:contentInsetLeft="0dp"
             app:contentInsetStart="0dp">
 
@@ -32,7 +33,7 @@
                 app:queryHint="Search podcast"
                 app:defaultQueryHint="Search podcast"
                 app:queryBackground="@android:color/transparent"
-                android:background="@drawable/bg_search_view_default" />
+                style="@style/Theme.Apptemplatejava.SearchView" />
 
         </com.google.android.material.appbar.MaterialToolbar>
 
