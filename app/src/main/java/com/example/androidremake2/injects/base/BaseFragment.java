@@ -1,10 +1,12 @@
 package com.example.androidremake2.injects.base;
 
+import android.animation.Animator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +21,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.List;
 
 public abstract class BaseFragment extends Fragment implements BaseComponent {
 
@@ -54,7 +57,7 @@ public abstract class BaseFragment extends Fragment implements BaseComponent {
         requireActivity().findViewById(R.id.loader).setVisibility(visibility);
     }
 
-    public void showBottomNavView() {
+    public void showBottomNavView(@Nullable List<Animator> concurrentAnimations) {
         BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottomNavView);
 
         if (bottomNav.getVisibility() == View.VISIBLE) {
@@ -63,34 +66,54 @@ public abstract class BaseFragment extends Fragment implements BaseComponent {
 
         bottomNav.setVisibility(View.VISIBLE);
 
-        new AnimationUtils.Builder()
+        List<Animator> animators = new AnimationUtils.Builder()
                 .setObjects(Arrays.asList(bottomNav))
                 .setAnimateAlphaIn(true)
                 .setTranslationYBegin(bottomNav.getTranslationY())
                 .setInterpolator(new FastOutSlowInInterpolator())
-                .start();
+                .getAnimators();
+
+        if (concurrentAnimations != null && !concurrentAnimations.isEmpty()) {
+            animators.addAll(concurrentAnimations);
+        }
+
+        AnimationUtils.animate(animators, AnimationUtils.ANIMATION_DURATION, 0, new LinearInterpolator());
+
+        for (Animator animator : animators) {
+            animator.removeAllListeners();
+        }
     }
 
-    public void hideBottomNavView() {
+    public void hideBottomNavView(@Nullable List<Animator> concurrentAnimations) {
         BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottomNavView);
 
         if (bottomNav.getVisibility() == View.GONE) {
             return;
         }
 
-        new AnimationUtils.Builder()
+        List<Animator> animators = new AnimationUtils.Builder()
                 .setObjects(Arrays.asList(bottomNav))
                 .setAnimateAlphaOut(true)
                 .setTranslationYEnd(bottomNav.getHeight())
-                .setInterpolator(new FastOutSlowInInterpolator())
-                .start();
+                .setInterpolator(new LinearInterpolator())
+                .getAnimators();
+
+        if (concurrentAnimations != null && !concurrentAnimations.isEmpty()) {
+            animators.addAll(concurrentAnimations);
+        }
+
+        AnimationUtils.animate(animators, AnimationUtils.ANIMATION_DURATION, 0, new LinearInterpolator());
+
+        for (Animator animator : animators) {
+            animator.removeAllListeners();
+        }
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 bottomNav.setVisibility(View.GONE);
             }
-        }, 100);
+        }, 300);
     }
 
     public void showMediaPlayingView() {

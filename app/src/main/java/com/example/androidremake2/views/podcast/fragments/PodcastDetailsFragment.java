@@ -206,7 +206,7 @@ public class PodcastDetailsFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
 
-        hideBottomNavView();
+        hideBottomNavView(null);
     }
 
     @Override

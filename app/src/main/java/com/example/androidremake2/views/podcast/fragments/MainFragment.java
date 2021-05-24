@@ -207,7 +207,7 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
     public void onResume() {
         super.onResume();
 
-        showBottomNavView();
+        showBottomNavView(null);
     }
 
     @Override

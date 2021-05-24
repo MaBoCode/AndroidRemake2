@@ -24,6 +24,8 @@
         <item name="scrimBackground">@color/black_900_alpha_087</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
 
+        <item name="android:windowLightStatusBar">false</item>
+
         <item name="elevationOverlayEnabled">true</item>
 
         <item name="bottomSheetDialogTheme">@style/Theme.Apptemplatejava.BottomSheetDialog</item>

@@ -1,6 +1,6 @@
 package com.example.androidremake2.views.search.fragments;
 
-import android.animation.AnimatorSet;
+import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -31,6 +31,7 @@ import com.example.androidremake2.views.search.events.EndlessRecyclerViewScrollL
 import com.example.androidremake2.views.search.utils.SearchAdapter;
 import com.example.androidremake2.views.search.viewmodels.SearchFragmentViewModel;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class SearchFragment extends BaseFragment implements View.OnFocusChangeListener, SearchView.OnQueryTextListener, PodcastAdapter.OnPodcastItemClickListener {
@@ -87,8 +88,6 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
     public void displayPodcastDetails(View view, Podcast podcast) {
         isPodcastDetailsShown = true;
 
-        hideBottomNavView();
-
         NavController navController = Navigation.findNavController(binding.getRoot());
 
         SearchFragmentDirections.DisplayPodcastDetailsAction action = SearchFragmentDirections.displayPodcastDetailsAction(podcast);
@@ -130,7 +129,7 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
         searchAdapter.notifyDataSetChanged();
     }
 
-    public void animateSearchView(boolean focus) {
+    public List<Animator> getSearchViewAnimators(boolean focus) {
         GradientDrawable gradientDrawable = (GradientDrawable) binding.searchView.getBackground();
         Float fromRadius = gradientDrawable.getCornerRadius();
         Float toRadius = focus ? 0f : DimUtils.dp2px(requireContext(), 8f);
@@ -164,22 +163,21 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
             searchIcon.setImageResource(R.drawable.ic_search_bar_outlined);
         }
 
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(300);
-        animatorSet.playTogether(searchViewCornerAnimation, searchViewMarginAnimation);
-        animatorSet.start();
+        return Arrays.asList(searchViewCornerAnimation, searchViewMarginAnimation);
     }
 
     @Override
     public void onFocusChange(View view, boolean hasFocus) {
+
+        List<Animator> searchViewAnimators = getSearchViewAnimators(hasFocus);
+
         if (hasFocus) {
-            hideBottomNavView();
+            hideBottomNavView(searchViewAnimators);
         } else {
             if (!isPodcastDetailsShown) {
-                showBottomNavView();
+                showBottomNavView(searchViewAnimators);
             }
         }
-        animateSearchView(hasFocus);
     }
 
     @Override
