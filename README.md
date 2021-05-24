@@ -1,6 +1,26 @@
 # AndroidRemake2
 
-<img width="" src="screenshots/podcast-app-wip.gif" alt="App Demo"/>
+<style>
+.row {
+  display: flex;
+}
+
+.column {
+  flex: 33.33%;
+  padding: 5px;
+}
+</style>
+<div class="row">
+  <div class="column">
+    <h3>1.2</h3>
+    <img width="400" src="screenshots/podcast-app-wip-2.gif" alt="App Demo"/>
+  </div>
+  <div class="column">
+    <h3>1.1</h3>
+    <img width="400" src="screenshots/podcast-app-wip.gif" alt="App Demo"/>
+  </div>
+</div>
+
 
 Remake inspired by Rifqy Aulia Ramadhan:
 
