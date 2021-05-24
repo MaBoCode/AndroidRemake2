@@ -66,7 +66,7 @@ public abstract class BaseFragment extends Fragment implements BaseComponent {
         new AnimationUtils.Builder()
                 .setObjects(Arrays.asList(bottomNav))
                 .setAnimateAlphaIn(true)
-                .setTranslationYBegin(100f)
+                .setTranslationYBegin(bottomNav.getTranslationY())
                 .setInterpolator(new FastOutSlowInInterpolator())
                 .start();
     }
@@ -81,7 +81,7 @@ public abstract class BaseFragment extends Fragment implements BaseComponent {
         new AnimationUtils.Builder()
                 .setObjects(Arrays.asList(bottomNav))
                 .setAnimateAlphaOut(true)
-                .setTranslationYEnd(100f)
+                .setTranslationYEnd(bottomNav.getHeight())
                 .setInterpolator(new FastOutSlowInInterpolator())
                 .start();
 
@@ -90,7 +90,7 @@ public abstract class BaseFragment extends Fragment implements BaseComponent {
             public void run() {
                 bottomNav.setVisibility(View.GONE);
             }
-        }, AnimationUtils.ANIMATION_DURATION);
+        }, 100);
     }
 
     public void showMediaPlayingView() {

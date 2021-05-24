@@ -86,6 +86,9 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
     @Override
     public void displayPodcastDetails(View view, Podcast podcast) {
         isPodcastDetailsShown = true;
+
+        hideBottomNavView();
+
         NavController navController = Navigation.findNavController(binding.getRoot());
 
         SearchFragmentDirections.DisplayPodcastDetailsAction action = SearchFragmentDirections.displayPodcastDetailsAction(podcast);
@@ -172,7 +175,9 @@ public class SearchFragment extends BaseFragment implements View.OnFocusChangeLi
         if (hasFocus) {
             hideBottomNavView();
         } else {
-            showBottomNavView();
+            if (!isPodcastDetailsShown) {
+                showBottomNavView();
+            }
         }
         animateSearchView(hasFocus);
     }
