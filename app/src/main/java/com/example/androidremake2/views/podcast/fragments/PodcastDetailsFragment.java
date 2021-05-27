@@ -1,5 +1,9 @@
 package com.example.androidremake2.views.podcast.fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,18 +15,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.androidremake2.R;
 import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.core.podcast.PodcastEpisode;
 import com.example.androidremake2.databinding.FrgPodcastDetailsBinding;
 import com.example.androidremake2.injects.base.BaseFragment;
 import com.example.androidremake2.injects.base.BaseViewModel;
+import com.example.androidremake2.utils.ThemeUtils;
 import com.example.androidremake2.views.MainActivityViewModel;
 import com.example.androidremake2.views.podcast.utils.PodcastEpisodesAdapter;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import org.androidannotations.annotations.EFragment;
@@ -51,6 +62,22 @@ public class PodcastDetailsFragment extends BaseFragment {
 
         binding = FrgPodcastDetailsBinding.inflate(inflater, container, false);
 
+        binding.lyAppBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                binding.appBarContainer.setTranslationY((float) -verticalOffset);
+                float percent = (float) (Math.abs(verticalOffset)) / binding.lyAppBar.getTotalScrollRange();
+
+                binding.appBarContainer.setAlpha(1f - percent);
+                binding.allEpisodesTitle2.setAlpha(percent);
+                //binding.appBarShadow.setAlpha(percent);
+
+                float scale = (1f - percent) + percent / 1.199f;
+                binding.appBarContainer.setScaleY(scale);
+                binding.appBarContainer.setScaleX(scale);
+            }
+        });
+
         setupActionBar();
 
         Podcast podcast = PodcastBottomSheetDialogFragmentArgs.fromBundle(getArguments()).getPodcast();
@@ -58,9 +85,35 @@ public class PodcastDetailsFragment extends BaseFragment {
         setupPodcastEpisodesAdapter(podcast);
         displayPodcastDetails(podcast);
 
-        activityViewModel.getPodcast(podcast.id);
-
         return binding.getRoot();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Podcast podcast = PodcastBottomSheetDialogFragmentArgs.fromBundle(getArguments()).getPodcast();
+        activityViewModel.getPodcast(podcast.id);
+    }
+
+    public void setGradientBackground(Drawable baseImg) {
+        int colorBackground = ThemeUtils.getThemeColor(requireContext(), android.R.attr.colorBackground);
+        int gradientColor = ThemeUtils.getThemeColor(requireContext(), R.attr.colorSecondary);
+
+        Bitmap bitmap = ((BitmapDrawable) baseImg).getBitmap();
+
+        Palette palette = Palette.from(bitmap).generate();
+        Palette.Swatch swatch = palette.getDarkVibrantSwatch();
+
+        if (swatch != null) {
+            gradientColor = swatch.getRgb();
+        }
+
+        GradientDrawable gradientBg = new GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM,
+                new int[]{gradientColor, colorBackground}
+        );
+        binding.appBarImg.setImageDrawable(gradientBg);
     }
 
     public void setupActionBar() {
@@ -99,6 +152,18 @@ public class PodcastDetailsFragment extends BaseFragment {
         Glide
                 .with(binding.getRoot())
                 .load(podcast.imageUrl)
+                .addListener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable @org.jetbrains.annotations.Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        setGradientBackground(resource);
+                        return false;
+                    }
+                })
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(binding.podcastImg);
     }
@@ -135,6 +200,13 @@ public class PodcastDetailsFragment extends BaseFragment {
     public void unsubscribeObservers() {
         activityViewModel.podcastLiveData.removeObservers(getViewLifecycleOwner());
         activityViewModel.loadingLiveData.removeObservers(getViewLifecycleOwner());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        hideBottomNavView(null);
     }
 
     @Override

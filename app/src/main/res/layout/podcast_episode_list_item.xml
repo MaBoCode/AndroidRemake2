@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="16dp"
-    android:background="@drawable/bg_podcast_episode">
+    style="@style/Theme.Apptemplatejava.PodcastEpisodeListItem">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineTop"
@@ -38,8 +38,8 @@
         android:id="@+id/podcastEpisodeImgCard"
         android:layout_width="98dp"
         android:layout_height="98dp"
-        android:theme="@style/Theme.Apptemplatejava.PodcastCard"
         app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
         app:layout_constraintTop_toTopOf="@id/guidelineTop"
         app:layout_constraintStart_toStartOf="@id/guidelineLeft">
 

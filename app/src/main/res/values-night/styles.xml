@@ -1,7 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Widget.Apptemplatejava.BottomSheet.Modal" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/bg_bottom_sheet</item>
+    <style name="Theme.Apptemplatejava.PodcastEpisodeListItem" parent="Theme.Apptemplatejava">
+        <item name="android:background">@drawable/bg_podcast_episode</item>
+        <item name="android:backgroundTint">@color/black_700</item>
+    </style>
+
+    <style name="Theme.Apptemplatejava.SearchView">
+        <item name="android:background">@drawable/bg_search_view_default</item>
+        <item name="android:backgroundTint">@color/black_700</item>
+    </style>
+
+    <style name="Theme.Apptemplatejava.MediaPlayingView">
+        <item name="android:background">@color/blue_700</item>
     </style>
 
 </resources>

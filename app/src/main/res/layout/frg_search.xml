@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:animateLayoutChanges="true">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/searchBarLayout"
@@ -19,6 +18,7 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             android:background="@android:color/transparent"
+            android:outlineAmbientShadowColor="@android:color/transparent"
             app:contentInsetLeft="0dp"
             app:contentInsetStart="0dp">
 
@@ -27,12 +27,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_margin="12dp"
+                android:outlineAmbientShadowColor="@android:color/transparent"
                 app:iconifiedByDefault="false"
                 app:searchIcon="@drawable/ic_search_bar_outlined"
                 app:queryHint="Search podcast"
                 app:defaultQueryHint="Search podcast"
                 app:queryBackground="@android:color/transparent"
-                android:background="@drawable/bg_search_view_default" />
+                style="@style/Theme.Apptemplatejava.SearchView" />
 
         </com.google.android.material.appbar.MaterialToolbar>
 
@@ -42,6 +43,7 @@
         android:id="@+id/searchResultRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
         android:clipToPadding="false"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="12dp"

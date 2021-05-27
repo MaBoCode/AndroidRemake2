@@ -113,9 +113,13 @@ public class AnimationUtils {
         }
 
         public void start() {
+            List<Animator> animators = getAnimators();
+            animate(animators, duration, delay, interpolator);
+        }
 
+        public List<Animator> getAnimators() {
             List<Animator> animators = new ArrayList<>();
-            for (Object object: objects) {
+            for (Object object : objects) {
                 View view = (View) object;
 
                 ObjectAnimator alpha = null;
@@ -161,11 +165,8 @@ public class AnimationUtils {
                     ObjectAnimator translateX = ObjectAnimator.ofFloat(view, "translationX", translationXBegin, translationXEnd);
                     animators.add(translateX);
                 }
-
             }
-
-            animate(animators, duration, delay, interpolator);
-
+            return animators;
         }
 
     }

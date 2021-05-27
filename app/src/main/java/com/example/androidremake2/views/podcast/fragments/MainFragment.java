@@ -88,8 +88,6 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
             }
         });
 
-        showBottomNavView();
-
         setupPodcastAdapter();
 
         return binding.getRoot();
@@ -128,8 +126,6 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
 
     @Override
     public void displayPodcastDetails(View view, Podcast podcast) {
-
-        hideBottomNavView();
 
         NavController navController = Navigation.findNavController(binding.getRoot());
 
@@ -211,7 +207,7 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
     public void onResume() {
         super.onResume();
 
-        showBottomNavView();
+        showBottomNavView(null);
     }
 
     @Override
