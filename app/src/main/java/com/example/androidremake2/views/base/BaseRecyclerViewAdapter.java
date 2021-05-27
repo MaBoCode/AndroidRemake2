@@ -1,31 +1,39 @@
 package com.example.androidremake2.views.base;
 
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
+import androidx.viewbinding.ViewBinding;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseRecyclerViewAdapter<T, V extends View> extends RecyclerView.Adapter<RecyclerViewWrapper<V>> {
+public abstract class BaseRecyclerViewAdapter<T, V extends ViewBinding> extends ListAdapter<T, BaseViewHolder<T, V>> {
 
-    protected List<T> items;
+    public BaseRecyclerViewAdapter(@NonNull @NotNull DiffUtil.ItemCallback<T> diffCallback) {
+        super(diffCallback);
+    }
 
     @NonNull
+    @NotNull
     @Override
-    public final RecyclerViewWrapper<V> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new RecyclerViewWrapper<V>(onCreateItemView(parent, viewType));
-    }
-
-    protected abstract V onCreateItemView(ViewGroup parent, int viewType);
-
-    public void setItems(List<T> items) {
-        this.items = items;
-    }
+    public abstract BaseViewHolder<T, V> onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType);
 
     @Override
-    public int getItemCount() {
-        return items.size();
+    public void onBindViewHolder(@NonNull @NotNull BaseViewHolder<T, V> holder, int position) {
+        T item = getItem(position);
+        holder.bind(item);
+    }
+
+    public void addSkeletonItems(int count) {
+        List<T> skeletonItems = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            skeletonItems.add(null);
+        }
+        this.submitList(skeletonItems);
     }
 }

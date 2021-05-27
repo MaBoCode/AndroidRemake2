@@ -29,6 +29,7 @@ import com.example.androidremake2.views.MainActivityViewModel;
 import com.example.androidremake2.views.podcast.utils.PodcastAdapter;
 import com.example.androidremake2.views.podcast.viewmodels.MainFragmentViewModel;
 import com.example.androidremake2.views.search.events.EndlessRecyclerViewScrollListener;
+import com.example.androidremake2.views.utils.RecyclerViewUtils;
 import com.example.androidremake2.views.views.MediaPlayingView;
 
 import org.androidannotations.annotations.EFragment;
@@ -70,6 +71,8 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
 
         binding = FrgMainBinding.inflate(inflater, container, false);
 
+        binding.lyShimmer.setShimmer(RecyclerViewUtils.getShimmer().build());
+
         MediaPlayingView mediaPlayingView = requireActivity().findViewById(R.id.mediaPlayingView);
         mediaPlayingView.getBinding().getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,22 +97,20 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
     }
 
     public void setupPodcastAdapter() {
-        RecyclerView podcastRecyclerView = binding.podcastsRecyclerView;
         this.podcastAdapter = new PodcastAdapter(new Podcast.PodcastDiff(), this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
-        layoutManager.setSmoothScrollbarEnabled(true);
+        RecyclerViewUtils.setupAdapter(binding.podcastsRecyclerView, layoutManager, podcastAdapter);
 
         onScrolled.setmLayoutManager(layoutManager);
 
-        podcastRecyclerView.addOnScrollListener(onScrolled);
-        podcastRecyclerView.setHasFixedSize(true);
-        podcastRecyclerView.setLayoutManager(layoutManager);
-        podcastRecyclerView.setAdapter(this.podcastAdapter);
-        podcastRecyclerView.setOnFlingListener(null);
+        binding.podcastsRecyclerView.addOnScrollListener(onScrolled);
+        binding.podcastsRecyclerView.setOnFlingListener(null);
 
         SnapHelper snapHelper = new LinearSnapHelper();
-        snapHelper.attachToRecyclerView(podcastRecyclerView);
+        snapHelper.attachToRecyclerView(binding.podcastsRecyclerView);
+
+        podcastAdapter.addSkeletonItems(1);
     }
 
     @Override
@@ -156,16 +157,15 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
             @Override
             public void onChanged(List<Podcast> podcasts) {
 
-                showHideLoader(LoadingStatus.NOT_LOADING);
-
                 if (podcasts == null || podcasts.isEmpty()) {
                     return;
                 }
 
                 List<Podcast> currentList = podcastAdapter.getCurrentList();
 
-                if (currentList.isEmpty()) {
+                if (currentList.isEmpty() || currentList.get(0) == null) {
                     podcastAdapter.submitList(podcasts);
+                    binding.lyShimmer.hideShimmer();
                 } else {
                     Integer count = viewModel.podcastCountInPage.getValue();
 
@@ -179,7 +179,11 @@ public class MainFragment extends BaseFragment implements PodcastAdapter.OnPodca
         viewModel.loadingLiveData.observe(getViewLifecycleOwner(), new Observer<LoadingStatus>() {
             @Override
             public void onChanged(LoadingStatus loadingStatus) {
-                showHideLoader(loadingStatus);
+                if (loadingStatus == LoadingStatus.LOADING) {
+                    binding.lyShimmer.startShimmer();
+                } else {
+                    binding.lyShimmer.stopShimmer();
+                }
             }
         });
 

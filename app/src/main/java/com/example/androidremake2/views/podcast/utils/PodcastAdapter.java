@@ -6,12 +6,15 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
 
 import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.databinding.PodcastListItemBinding;
+import com.example.androidremake2.views.base.BaseRecyclerViewAdapter;
+import com.example.androidremake2.views.base.BaseViewHolder;
 
-public class PodcastAdapter extends ListAdapter<Podcast, PodcastViewHolder> {
+import org.jetbrains.annotations.NotNull;
+
+public class PodcastAdapter extends BaseRecyclerViewAdapter<Podcast, PodcastListItemBinding> {
 
     protected OnPodcastItemClickListener podcastItemClickListener;
 
@@ -27,20 +30,20 @@ public class PodcastAdapter extends ListAdapter<Podcast, PodcastViewHolder> {
     }
 
     @NonNull
+    @NotNull
     @Override
-    public PodcastViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public BaseViewHolder<Podcast, PodcastListItemBinding> onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         PodcastListItemBinding binding = PodcastListItemBinding.inflate(
                 LayoutInflater.from(parent.getContext()),
                 parent,
                 false
         );
-        return new PodcastViewHolder(binding);
+        return new PodcastViewHolder(binding, podcastItemClickListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PodcastViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull @NotNull BaseViewHolder<Podcast, PodcastListItemBinding> holder, int position) {
         Podcast podcast = getItem(position);
-        holder.bind(podcast, podcastItemClickListener);
+        holder.bind(podcast);
     }
-
 }

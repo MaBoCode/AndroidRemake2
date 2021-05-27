@@ -1,29 +1,27 @@
 package com.example.androidremake2.views.podcast.viewmodels;
 
-import androidx.hilt.Assisted;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 
-import com.example.androidremake2.core.podcast.GetBestPodcastsResponse;
 import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.core.podcast.PodcastService;
 import com.example.androidremake2.injects.base.BaseViewModel;
 import com.example.androidremake2.utils.Logs;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Action;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 @HiltViewModel
 public class MainFragmentViewModel extends BaseViewModel {
 
+    @Inject
     protected PodcastService podcastService;
 
     protected MutableLiveData<List<Podcast>> _bestPodcastsLiveData = new MutableLiveData<>();
@@ -33,51 +31,38 @@ public class MainFragmentViewModel extends BaseViewModel {
     public MutableLiveData<Integer> podcastCountInPage = new MutableLiveData<>(0);
 
     @Inject
-    public MainFragmentViewModel(PodcastService podcastService, @Assisted SavedStateHandle savedStateHandle) {
-        this.podcastService = podcastService;
+    public MainFragmentViewModel(SavedStateHandle savedStateHandle) {
         this.savedStateHandle = savedStateHandle;
     }
 
     public void getBestPodcasts(Integer page, String region) {
         podcastService.getBestPodcasts(page, region)
+                .delay(2, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) throws Throwable {
-                        _loadingLiveData.postValue(LoadingStatus.LOADING);
+                .doOnSubscribe(disposable -> _loadingLiveData.postValue(LoadingStatus.LOADING))
+                .doFinally(() -> _loadingLiveData.postValue(LoadingStatus.NOT_LOADING))
+                .subscribe(getBestPodcastsResponse -> {
+
+                    List<Podcast> allPodcasts = _bestPodcastsLiveData.getValue();
+                    if (allPodcasts != null) {
+                        allPodcasts.addAll(getBestPodcastsResponse.podcasts);
+                    } else {
+                        allPodcasts = getBestPodcastsResponse.podcasts;
                     }
-                })
-                .doFinally(new Action() {
-                    @Override
-                    public void run() throws Throwable {
-                        _loadingLiveData.postValue(LoadingStatus.NOT_LOADING);
+
+                    _bestPodcastsLiveData.postValue(allPodcasts);
+
+                    if (getBestPodcastsResponse.hasNext) {
+                        nextPage.postValue(getBestPodcastsResponse.nextPageNumber);
+                    } else {
+                        nextPage.postValue(null);
                     }
-                })
-                .subscribe(new Consumer<GetBestPodcastsResponse>() {
-                    @Override
-                    public void accept(GetBestPodcastsResponse getBestPodcastsResponse) throws Throwable {
 
-                        List<Podcast> allPodcasts = _bestPodcastsLiveData.getValue();
-                        if (allPodcasts != null) {
-                            allPodcasts.addAll(getBestPodcastsResponse.podcasts);
-                        } else {
-                            allPodcasts = getBestPodcastsResponse.podcasts;
-                        }
-
-                        _bestPodcastsLiveData.postValue(allPodcasts);
-
-                        if (getBestPodcastsResponse.hasNext) {
-                            nextPage.postValue(getBestPodcastsResponse.nextPageNumber);
-                        } else {
-                            nextPage.postValue(null);
-                        }
-
-                        podcastCountInPage.postValue(getBestPodcastsResponse.podcasts.size());
-                    }
+                    podcastCountInPage.postValue(getBestPodcastsResponse.podcasts.size());
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Throwable {
+                    public void accept(Throwable throwable) {
                         Logs.error(this, throwable.getLocalizedMessage());
                     }
                 });
