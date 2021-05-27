@@ -1,12 +1,11 @@
 package com.example.androidremake2.views.podcast.utils;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.example.androidremake2.R;
 import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.core.podcast.PodcastEpisode;
 import com.example.androidremake2.databinding.PodcastEpisodeListItemBinding;
+import com.example.androidremake2.views.base.BaseViewHolder;
 
 import org.jsoup.Jsoup;
 
@@ -14,16 +13,29 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class PodcastEpisodeViewHolder extends RecyclerView.ViewHolder {
+public class PodcastEpisodeViewHolder extends BaseViewHolder<PodcastEpisode, PodcastEpisodeListItemBinding> {
 
-    protected PodcastEpisodeListItemBinding binding;
+    protected Podcast podcast;
 
-    public PodcastEpisodeViewHolder(PodcastEpisodeListItemBinding binding) {
-        super(binding.getRoot());
-        this.binding = binding;
+    public PodcastEpisodeViewHolder(PodcastEpisodeListItemBinding binding, Podcast podcast) {
+        super(binding);
+        this.podcast = podcast;
     }
 
-    public void bind(final Podcast podcast, final PodcastEpisode episode) {
+    @Override
+    public void bind(PodcastEpisode episode) {
+
+        if (episode == null) {
+            binding.lyItem.setBackgroundResource(R.drawable.bg_podcast_episode_skeleton);
+            binding.podcastEpisodeTitleTxt.setText("");
+            binding.podcastEpisodeDescriptionTxt.setText("");
+            binding.podcastPublisherTxt.setText("");
+            binding.podcastEpisodeDurationTxt.setText("");
+            binding.podcastEpisodeImg.setImageResource(R.drawable.bg_podcast_episode_skeleton);
+            return;
+        }
+
+        binding.lyShimmer.hideShimmer();
         binding.podcastEpisodeTitleTxt.setText(episode.title);
         binding.podcastPublisherTxt.setText(podcast.publisher);
         binding.podcastEpisodeDescriptionTxt.setText(Jsoup.parse(episode.description).text());
@@ -35,7 +47,6 @@ public class PodcastEpisodeViewHolder extends RecyclerView.ViewHolder {
         Glide
                 .with(binding.getRoot())
                 .load(episode.imageUrl)
-                .placeholder(R.drawable.ic_launcher_background)
                 .into(binding.podcastEpisodeImg);
     }
 }

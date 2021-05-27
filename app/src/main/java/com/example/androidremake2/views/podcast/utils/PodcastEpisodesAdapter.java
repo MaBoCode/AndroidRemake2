@@ -5,15 +5,16 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
 
 import com.example.androidremake2.core.podcast.Podcast;
 import com.example.androidremake2.core.podcast.PodcastEpisode;
 import com.example.androidremake2.databinding.PodcastEpisodeListItemBinding;
+import com.example.androidremake2.views.base.BaseRecyclerViewAdapter;
+import com.example.androidremake2.views.utils.RecyclerViewUtils;
 
 import org.jetbrains.annotations.NotNull;
 
-public class PodcastEpisodesAdapter extends ListAdapter<PodcastEpisode, PodcastEpisodeViewHolder> {
+public class PodcastEpisodesAdapter extends BaseRecyclerViewAdapter<PodcastEpisode, PodcastEpisodeListItemBinding> {
 
     protected Podcast podcast;
 
@@ -31,12 +32,7 @@ public class PodcastEpisodesAdapter extends ListAdapter<PodcastEpisode, PodcastE
                 parent,
                 false
         );
-        return new PodcastEpisodeViewHolder(binding);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull @NotNull PodcastEpisodeViewHolder holder, int position) {
-        PodcastEpisode episode = getItem(position);
-        holder.bind(podcast, episode);
+        binding.lyShimmer.setShimmer(RecyclerViewUtils.getShimmer().build());
+        return new PodcastEpisodeViewHolder(binding, podcast);
     }
 }

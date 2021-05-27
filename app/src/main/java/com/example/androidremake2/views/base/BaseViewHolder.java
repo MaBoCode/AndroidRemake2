@@ -13,4 +13,8 @@ public abstract class BaseViewHolder<T, V extends ViewBinding> extends RecyclerV
     }
 
     public abstract void bind(final T object);
+
+    public V getBinding() {
+        return binding;
+    }
 }

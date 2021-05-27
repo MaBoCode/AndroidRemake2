@@ -14,8 +14,11 @@ import java.util.List;
 
 public abstract class BaseRecyclerViewAdapter<T, V extends ViewBinding> extends ListAdapter<T, BaseViewHolder<T, V>> {
 
+    protected List<T> skeletonItems;
+
     public BaseRecyclerViewAdapter(@NonNull @NotNull DiffUtil.ItemCallback<T> diffCallback) {
         super(diffCallback);
+        this.skeletonItems = new ArrayList<>();
     }
 
     @NonNull
@@ -30,7 +33,6 @@ public abstract class BaseRecyclerViewAdapter<T, V extends ViewBinding> extends 
     }
 
     public void addSkeletonItems(int count) {
-        List<T> skeletonItems = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             skeletonItems.add(null);
         }

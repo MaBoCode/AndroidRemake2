@@ -20,12 +20,11 @@ import com.google.android.exoplayer2.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Action;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -97,28 +96,14 @@ public class MainActivityViewModel extends BaseViewModel implements Player.Event
 
     public void getPodcast(String id) {
         podcastService.getPodcast(id)
+                .delay(1, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .doOnSubscribe(new Consumer<Disposable>() {
+                .doOnSubscribe(disposable -> _loadingLiveData.postValue(LoadingStatus.LOADING))
+                .doFinally(() -> _loadingLiveData.postValue(LoadingStatus.NOT_LOADING))
+                .subscribe(podcast -> _podcastLiveData.postValue(podcast), new Consumer<Throwable>() {
                     @Override
-                    public void accept(Disposable disposable) throws Throwable {
-                        _loadingLiveData.postValue(LoadingStatus.LOADING);
-                    }
-                })
-                .doFinally(new Action() {
-                    @Override
-                    public void run() throws Throwable {
-                        _loadingLiveData.postValue(LoadingStatus.NOT_LOADING);
-                    }
-                })
-                .subscribe(new Consumer<Podcast>() {
-                    @Override
-                    public void accept(Podcast podcast) throws Throwable {
-                        _podcastLiveData.postValue(podcast);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Throwable {
+                    public void accept(Throwable throwable) {
                         Logs.error(this, throwable.getLocalizedMessage());
                     }
                 });

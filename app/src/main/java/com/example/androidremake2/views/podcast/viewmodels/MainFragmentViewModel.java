@@ -10,7 +10,6 @@ import com.example.androidremake2.injects.base.BaseViewModel;
 import com.example.androidremake2.utils.Logs;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -37,7 +36,6 @@ public class MainFragmentViewModel extends BaseViewModel {
 
     public void getBestPodcasts(Integer page, String region) {
         podcastService.getBestPodcasts(page, region)
-                .delay(2, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .doOnSubscribe(disposable -> _loadingLiveData.postValue(LoadingStatus.LOADING))

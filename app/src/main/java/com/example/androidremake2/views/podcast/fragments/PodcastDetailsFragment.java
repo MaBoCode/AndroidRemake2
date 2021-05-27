@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.palette.graphics.Palette;
@@ -30,9 +29,12 @@ import com.example.androidremake2.core.podcast.PodcastEpisode;
 import com.example.androidremake2.databinding.FrgPodcastDetailsBinding;
 import com.example.androidremake2.injects.base.BaseFragment;
 import com.example.androidremake2.injects.base.BaseViewModel;
+import com.example.androidremake2.utils.Logs;
 import com.example.androidremake2.utils.ThemeUtils;
 import com.example.androidremake2.views.MainActivityViewModel;
+import com.example.androidremake2.views.podcast.utils.PodcastEpisodeViewHolder;
 import com.example.androidremake2.views.podcast.utils.PodcastEpisodesAdapter;
+import com.example.androidremake2.views.utils.RecyclerViewUtils;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 
@@ -133,15 +135,10 @@ public class PodcastDetailsFragment extends BaseFragment {
     }
 
     public void setupPodcastEpisodesAdapter(Podcast podcast) {
-        RecyclerView episodesReyclerView = binding.episodesRecyclerView;
         this.episodesAdapter = new PodcastEpisodesAdapter(podcast, new PodcastEpisode.PodcastEpisodeDiff());
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-        layoutManager.setSmoothScrollbarEnabled(true);
-
-        episodesReyclerView.setHasFixedSize(true);
-        episodesReyclerView.setLayoutManager(layoutManager);
-        episodesReyclerView.setAdapter(this.episodesAdapter);
+        RecyclerViewUtils.setupAdapter(binding.episodesRecyclerView, layoutManager, episodesAdapter);
+        episodesAdapter.addSkeletonItems(2);
     }
 
     public void displayPodcastDetails(Podcast podcast) {
@@ -171,6 +168,7 @@ public class PodcastDetailsFragment extends BaseFragment {
     public void displayPodcastEpisodes(List<PodcastEpisode> episodes) {
         if (episodes != null && !episodes.isEmpty()) {
             this.episodesAdapter.submitList(episodes);
+            Logs.debug(this, "" + episodesAdapter.getItemCount());
         }
     }
 
@@ -181,17 +179,22 @@ public class PodcastDetailsFragment extends BaseFragment {
 
     @Override
     public void subscribeObservers() {
-        activityViewModel.podcastLiveData.observe(getViewLifecycleOwner(), new Observer<Podcast>() {
-            @Override
-            public void onChanged(Podcast podcast) {
-                displayPodcastEpisodes(podcast.episodes);
-            }
+        activityViewModel.podcastLiveData.observe(getViewLifecycleOwner(), podcast -> {
+            displayPodcastEpisodes(podcast.episodes);
         });
 
-        activityViewModel.loadingLiveData.observe(getViewLifecycleOwner(), new Observer<BaseViewModel.LoadingStatus>() {
-            @Override
-            public void onChanged(BaseViewModel.LoadingStatus status) {
-                showHideLoader(status);
+        activityViewModel.loadingLiveData.observe(getViewLifecycleOwner(), status -> {
+            for (int i = 0; i < episodesAdapter.getItemCount(); i++) {
+                PodcastEpisodeViewHolder viewHolder = (PodcastEpisodeViewHolder) binding.episodesRecyclerView.findViewHolderForAdapterPosition(i);
+
+                if (viewHolder == null)
+                    continue;
+
+                if (status == BaseViewModel.LoadingStatus.LOADING) {
+                    viewHolder.getBinding().lyShimmer.startShimmer();
+                } else {
+                    viewHolder.getBinding().lyShimmer.stopShimmer();
+                }
             }
         });
     }
